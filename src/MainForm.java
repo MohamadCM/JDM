@@ -33,6 +33,7 @@ public class MainForm {
     private JPanel downloadPanel;
     private SettingForm settingForm;
     private MouseListener mouseListener;
+    private Queue defaultQueue;
     /**
      * Each mainForm needs a title to get created
      * @param title
@@ -106,9 +107,9 @@ public class MainForm {
         aboutMe.setMnemonic('i');
         help.add(aboutMe);
         help.setFocusable(false);
-        exitMenu = new JMenu("                                   Exit                                   ");
+        exitMenu = new JMenu("                              Exit                               ");
         exitMenu.setFocusable(false);
-        exit = new JMenuItem("                                   Exit:(                                 ");
+        exit = new JMenuItem("                                   Exit:(                             ");
         exit.setFocusable(false);
         exit.setMnemonic('x');
         exitMenu.add(exit);
@@ -118,6 +119,12 @@ public class MainForm {
         downloadManager.setJMenuBar(menuBar);
         mouseListener = new MyMouseListener();
         settingButton.addMouseListener(mouseListener);
+        downloadPanel = new JPanel();
+        defaultQueue = new Queue("Default");
+        Download download = new Download("Test","TheAdress",1000);
+        defaultQueue.addDownload(download);
+        downloadPanel.add(defaultQueue.getDownloads().get(0).getDownloadPanel());
+        mainPanel.add(downloadPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -128,32 +135,12 @@ public class MainForm {
         downloadManager.setVisible(true);
     }
 
-    private class MyMouseListener implements MouseListener
+    private class MyMouseListener extends MouseAdapter
     {
         @Override
-        public void mouseClicked(MouseEvent mouseEvent) {
+        public void mousePressed(MouseEvent mouseEvent) {
             if(mouseEvent.getSource().equals(settingButton))
                 settingForm.showSetting();
-        }
-
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent mouseEvent) {
-
         }
     }
     private void showAboutMe()
