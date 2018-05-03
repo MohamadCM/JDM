@@ -1,9 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 
 /**
@@ -39,8 +37,10 @@ public class SettingForm {
         JLabel label3 = new JLabel("Select programme's look and feel:");
         label3.setFocusable(false);
         numberofDownsSpinner = new JSpinner(new SpinnerNumberModel());
-        numberofDownsSpinner.setFocusable(false);
+        //numberofDownsSpinner.setFocusable(false);
+        numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         numberofDownsSpinner.setValue((Integer)1);
+        numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         lookAndFeelInfoBox = new JComboBox<String>();
         for(UIManager.LookAndFeelInfo info: UIManager.getInstalledLookAndFeels())
             lookAndFeelInfoBox.addItem(info.getClassName());
@@ -51,7 +51,8 @@ public class SettingForm {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         chooseAdress = new JButton("Choose address");
-        chooseAdress.setFocusable(false);
+        //chooseAdress.setFocusable(false);
+        chooseAdress.addKeyListener(new MyKeyboardListener());
         chooseAdress.addMouseListener(new MyMouseListener());
         fileChooser.setFocusable(false);
         mainFrame.add(label1);
@@ -65,10 +66,12 @@ public class SettingForm {
         cancelButton.setFocusable(false);
         okButton = new JButton("OK");
         okButton.addMouseListener(new MyMouseListener());
-        okButton.setFocusable(false);
+        okButton.addKeyListener(new MyKeyboardListener());
+        //okButton.setFocusable(false);
+        okButton.requestFocus();
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
-        mainFrame.requestFocus();
+        //mainFrame.requestFocus();
     }
     /**
      * Shows setting form
@@ -107,5 +110,36 @@ public class SettingForm {
             if (mouseEvent.getSource().equals(chooseAdress))
                 fileChooser.showDialog(null,"Confirm this path");
         }
+    }
+    private class MyKeyboardListener extends KeyAdapter
+    {
+        @Override
+        public void keyTyped(KeyEvent keyEvent)
+        {
+            if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
+                numberOfSimDowns = (Integer)numberofDownsSpinner.getValue();
+                try {
+                    UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();
+                }
+                saveAdress = fileChooser.getCurrentDirectory().toString();
+                hidesetting();
+            }
+
+        }
+    }
+    /**
+     * @return location of saiving a file
+     */
+    public String getSaveAdress()
+    {
+        return saveAdress;
     }
 }

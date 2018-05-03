@@ -17,11 +17,13 @@ public class Download {
     private long downloadedVolume;
     private double percentDownload;
     private long downloadRate;
-    public Download(String name, String address, long volume)
+    private String link;
+    public Download(String name, String address, long volume, String link)
     {
         this.name = name;
         this.address = address;
         this.volume = volume;
+        this.link = link;
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         JLabel label1 = new JLabel("Name: " + name);
         JLabel label2 = new JLabel("              Download rate:  " + downloadRate);

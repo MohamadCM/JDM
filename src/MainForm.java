@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * This class creates main form of the programme
@@ -30,16 +31,17 @@ public class MainForm {
     private JMenuItem setting;
     private JMenuItem aboutMe;
     private JMenuItem exit;
-    private JPanel downloadPanel;
+    private static JPanel downloadPanel;
     private SettingForm settingForm;
     private MouseListener mouseListener;
-    private Queue defaultQueue;
+    private static Queue queue;
     /**
      * Each mainForm needs a title to get created
      * @param title
      */
     public MainForm(String title)
     {
+        mouseListener = new MyMouseListener();
         downloadManager = new JFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         downloadManager.setSize(1200,900);
@@ -52,16 +54,21 @@ public class MainForm {
         newDownloadButton.setFocusable(false);
         pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
         newDownloadButton.setToolTipText("Start a new download!");
+        newDownloadButton.addMouseListener(mouseListener);
         pauseButton.setFocusable(false);
+        pauseButton.addMouseListener(mouseListener);
         resumeButton = new JButton("", new ImageIcon("Images/resume.png"));
         resumeButton.setToolTipText("Resume a paused download");
         resumeButton.setFocusable(false);
+        resumeButton.addMouseListener(mouseListener);
         cancelButton = new JButton("", new ImageIcon("Images/cancel.png"));
         cancelButton.setToolTipText("Cancel a selected download");
         cancelButton.setFocusable(false);
+        cancelButton.addMouseListener(mouseListener);
         removeButton = new JButton("", new ImageIcon("Images/remove.png"));
         removeButton.setToolTipText("Remove selected download");
         removeButton.setFocusable(false);
+        removeButton.addMouseListener(mouseListener);
         settingButton = new JButton("", new ImageIcon("Images/setting.png"));
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
@@ -117,13 +124,11 @@ public class MainForm {
         menuBar.add(help);
         menuBar.add(exitMenu);
         downloadManager.setJMenuBar(menuBar);
-        mouseListener = new MyMouseListener();
         settingButton.addMouseListener(mouseListener);
         downloadPanel = new JPanel();
-        defaultQueue = new Queue("Default");
-        Download download = new Download("Test","TheAdress",1000);
-        defaultQueue.addDownload(download);
-        downloadPanel.add(defaultQueue.getDownloads().get(0).getDownloadPanel());
+        queue = new Queue("Default");
+        //Download download = new Download("Test","TheAdress",1000,"");
+        //queue.addDownload(download);
         mainPanel.add(downloadPanel, BorderLayout.CENTER);
     }
 
@@ -141,7 +146,36 @@ public class MainForm {
         public void mousePressed(MouseEvent mouseEvent) {
             if(mouseEvent.getSource().equals(settingButton))
                 settingForm.showSetting();
+            if(mouseEvent.getSource().equals(newDownloadButton))
+                addDownload();
+            if (mouseEvent.getSource().equals(removeButton))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(resumeButton))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(pauseButton))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(cancelButton))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
         }
+    }
+
+    private void addDownload()
+    {
+        NewDownloadForm downloadForm = new NewDownloadForm(settingForm.getSaveAdress(), queue);
+        downloadForm.showForm();
+    }
+
+    /**
+     * This class is used to update the download list and show them
+     */
+    public static void updateDownloadList()
+    {
+        for(Download d : queue.getDownloads())
+        {
+            downloadPanel.add(d.getDownloadPanel());
+        }
+        downloadPanel.revalidate();
+        downloadPanel.repaint();
     }
     private void showAboutMe()
     {
