@@ -31,6 +31,8 @@ public class MainForm {
     private JMenuItem aboutMe;
     private JMenuItem exit;
     private JPanel downloadPanel;
+    private SettingForm settingForm;
+    private MouseListener mouseListener;
     /**
      * Each mainForm needs a title to get created
      * @param title
@@ -41,6 +43,7 @@ public class MainForm {
         downloadManager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         downloadManager.setSize(1200,900);
         downloadManager.setLocationRelativeTo(null);
+        settingForm = new SettingForm();
         mainPanel = new JPanel(new BorderLayout());
         leftPanel = new JPanel(new GridLayout(6,1,5,5));
         downloadManager.setContentPane(mainPanel);
@@ -113,7 +116,8 @@ public class MainForm {
         menuBar.add(help);
         menuBar.add(exitMenu);
         downloadManager.setJMenuBar(menuBar);
-        downloadMenu.addKeyListener(new MyKeyListener());
+        mouseListener = new MyMouseListener();
+        settingButton.addMouseListener(mouseListener);
     }
 
     /**
@@ -124,20 +128,31 @@ public class MainForm {
         downloadManager.setVisible(true);
     }
 
-    private class MyKeyListener implements KeyListener
+    private class MyMouseListener implements MouseListener
     {
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+            if(mouseEvent.getSource().equals(settingButton))
+                settingForm.showSetting();
+        }
 
         @Override
-        public void keyTyped(KeyEvent keyEvent) {
+        public void mousePressed(MouseEvent mouseEvent) {
 
         }
 
         @Override
-        public void keyPressed(KeyEvent keyEvent) {
+        public void mouseReleased(MouseEvent mouseEvent) {
+
         }
 
         @Override
-        public void keyReleased(KeyEvent keyEvent) {
+        public void mouseEntered(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
 
         }
     }
