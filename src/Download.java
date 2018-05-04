@@ -1,5 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 /**
  * Each download task is an instance of this class
@@ -18,6 +24,8 @@ public class Download {
     private double percentDownload;
     private long downloadRate;
     private String link;
+    private LocalDateTime startTime;
+    private DownloadInfoForm downloadInfoForm;
     public Download(String name, String address, long volume, String link)
     {
         this.name = name;
@@ -38,6 +46,8 @@ public class Download {
         downloadPanel.add(label4);
         downloadPanel.add(label5);
         downloadPanel.setPreferredSize(new Dimension(1000,100));
+        startTime = LocalDateTime.now();
+        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, downloadedVolume, percentDownload, downloadRate, startTime);
     }
 
     /**
@@ -48,5 +58,13 @@ public class Download {
         return downloadPanel;
     }
 
+    /**
+     * Shows DonloadInfoForm of current download
+     */
+    public void showDownloadInfoForm()
+    {
+        downloadInfoForm.showForm();
+    }
 //    public void updateStatus()
+
 }

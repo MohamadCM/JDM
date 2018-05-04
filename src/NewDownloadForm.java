@@ -52,9 +52,11 @@ public class NewDownloadForm {
         JLabel label1 = new JLabel("Link:");
         label1.setFocusable(false);
         link = new JTextField();
+        link.addKeyListener(new MyKeyboardListener());
         //link.setFocusable(false);
         JLabel label2 = new JLabel("Name:");
         name = new JTextField();
+        name.addKeyListener(new MyKeyboardListener());
         //name.setFocusable(false);
         label2.setFocusable(false);
         JLabel label3 = new JLabel("Default save location");

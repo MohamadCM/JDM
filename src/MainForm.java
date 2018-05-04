@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class MainForm {
     private SettingForm settingForm;
     private MouseListener mouseListener;
     private static Queue queue;
+    private static JScrollPane scrollPane;
+    private final int MaxNumberOfDownloads = 20;
     /**
      * Each mainForm needs a title to get created
      * @param title
@@ -125,11 +128,25 @@ public class MainForm {
         menuBar.add(exitMenu);
         downloadManager.setJMenuBar(menuBar);
         settingButton.addMouseListener(mouseListener);
-        downloadPanel = new JPanel();
+
+        /*
+        Need a better solution here :((
+         */
+
+        downloadPanel = new JPanel(new GridLayout(MaxNumberOfDownloads,1,1,1));
         queue = new Queue("Default");
+        scrollPane = new JScrollPane(downloadPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBounds(50, 30, 300, 50);
+
+        /*
+        Test
+         */
         //Download download = new Download("Test","TheAdress",1000,"");
         //queue.addDownload(download);
-        mainPanel.add(downloadPanel, BorderLayout.CENTER);
+
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
     /**
@@ -149,13 +166,13 @@ public class MainForm {
             if(mouseEvent.getSource().equals(newDownloadButton))
                 addDownload();
             if (mouseEvent.getSource().equals(removeButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if(mouseEvent.getSource().equals(resumeButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if(mouseEvent.getSource().equals(pauseButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if(mouseEvent.getSource().equals(cancelButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource" + mouseEvent.getSource());
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
         }
     }
 
@@ -173,6 +190,7 @@ public class MainForm {
         for(Download d : queue.getDownloads())
         {
             downloadPanel.add(d.getDownloadPanel());
+            d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
         }
         downloadPanel.revalidate();
         downloadPanel.repaint();
@@ -186,5 +204,18 @@ public class MainForm {
                 "This programme is a simple download manager,\n" +
                 "you can use start a new download by using + button\n" +
                 "and or remove it using specified buttons\n");
+    }
+    /*
+    Listener for downloads
+     */
+    private static class DPanelMouseLister extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+            for(Download d : queue.getDownloads())
+            {
+                if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
+                    d.showDownloadInfoForm();
+            }
+        }
     }
 }
