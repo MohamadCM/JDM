@@ -104,11 +104,13 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                saveAdress = fileChooser.getCurrentDirectory().toString();
-                hidesetting();
             }
             if (mouseEvent.getSource().equals(chooseAdress))
                 fileChooser.showDialog(null,"Confirm this path");
+            saveAdress = fileChooser.getCurrentDirectory().toString();
+            mainFrame.dispose();
+            hidesetting();
+
         }
     }
     private class MyKeyboardListener extends KeyAdapter
@@ -130,6 +132,7 @@ public class SettingForm {
                     e.printStackTrace();
                 }
                 saveAdress = fileChooser.getCurrentDirectory().toString();
+                mainFrame.dispose();
                 hidesetting();
             }
 

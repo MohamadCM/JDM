@@ -147,6 +147,7 @@ public class MainForm {
         //queue.addDownload(download);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+        downloadManager.pack();
     }
 
     /**
