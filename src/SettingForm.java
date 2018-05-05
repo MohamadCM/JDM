@@ -131,7 +131,8 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                saveAdress = fileChooser.getCurrentDirectory().toString();
+                if(saveAdress != null)
+                    saveAdress = fileChooser.getCurrentDirectory().toString();
                 mainFrame.dispose();
                 hidesetting();
             }
