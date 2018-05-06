@@ -30,11 +30,11 @@ public class Queue {
     }
     /**
      * Used to remove a  Download from queue
-     * @param download is the download that gonna be removed
+     * @param i is index of the download that gonna be removed
      */
-    public void removeDownload(Download download)
+    public void removeDownload(int i)
     {
-        downloads.remove(download);
+        downloads.remove(i);
     }
 
     /**

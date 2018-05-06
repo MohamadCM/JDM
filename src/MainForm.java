@@ -147,7 +147,7 @@ public class MainForm {
         //queue.addDownload(download);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        downloadManager.pack();
+        //downloadManager.pack();
     }
 
     /**
@@ -167,7 +167,7 @@ public class MainForm {
             if(mouseEvent.getSource().equals(newDownloadButton))
                 addDownload();
             if (mouseEvent.getSource().equals(removeButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+                delete();
             if(mouseEvent.getSource().equals(resumeButton))
                 System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if(mouseEvent.getSource().equals(pauseButton))
@@ -188,9 +188,11 @@ public class MainForm {
      */
     public static void updateDownloadList()
     {
+        downloadPanel.removeAll();
         for(Download d : queue.getDownloads())
         {
             downloadPanel.add(d.getDownloadPanel());
+            d.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
             d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
         }
         downloadPanel.revalidate();
@@ -216,7 +218,33 @@ public class MainForm {
             {
                 if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
                     d.showDownloadInfoForm();
+                if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON1)
+                {
+                    for(Download tmpDownload : queue.getDownloads())
+                    {
+                        if(tmpDownload.getDownloadPanel().getBackground().equals(Color.CYAN)) {
+                            tmpDownload.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
+                            tmpDownload.getDownloadPanel().revalidate();
+                            tmpDownload.getDownloadPanel().repaint();
+                        }
+                    }
+                    d.getDownloadPanel().setBackground(Color.CYAN);
+                    d.getDownloadPanel().revalidate();
+                    d.getDownloadPanel().repaint();
+                }
             }
         }
+    }
+
+    private void delete()
+    {
+        if(queue.getDownloads().size() == 0)
+            return;
+        int i = 0;
+        for(i = 0 ; i < queue.getDownloads().size() ; i++)
+            if(!queue.getDownloads().get(i).getDownloadPanel().equals(Color.LIGHT_GRAY))
+                break;
+        queue.removeDownload(i);
+        updateDownloadList();
     }
 }

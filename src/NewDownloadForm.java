@@ -146,14 +146,17 @@ public class NewDownloadForm {
         public void mousePressed(MouseEvent mouseEvent) {
             if (mouseEvent.getSource().equals(selectAddress)){
                 fileChooser.showDialog(null, "Confirm");
-                saveAdress = fileChooser.getCurrentDirectory().toString();
+                if(fileChooser.getCurrentDirectory().toString() != null)
+                    saveAdress = fileChooser.getCurrentDirectory().toString();
             }
             if(mouseEvent.getSource().equals(cancelButton))
                 hideForm();
             else if(mouseEvent.getSource().equals(okButton)){
-                queue.getDownloads().add(new Download(name.getText(),saveAdress, size,link.getText()));
-                MainForm.updateDownloadList();
-                hideForm();
+                if(link != null && name != null) {
+                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
+                    MainForm.updateDownloadList();
+                    mainFrame.dispose();
+                }
             }
         }
     }
@@ -161,9 +164,11 @@ public class NewDownloadForm {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
             if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
-                queue.getDownloads().add(new Download(name.getText(),saveAdress, size,link.getText()));
-                MainForm.updateDownloadList();
-                hideForm();
+                if(link != null && name != null) {
+                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
+                    MainForm.updateDownloadList();
+                    mainFrame.dispose();
+                }
             }
         }
     }

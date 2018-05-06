@@ -45,7 +45,7 @@ public class SettingForm {
         for(UIManager.LookAndFeelInfo info: UIManager.getInstalledLookAndFeels())
             lookAndFeelInfoBox.addItem(info.getClassName());
         fileChooser = new JFileChooser();
-        saveAdress = ".";
+        saveAdress = "..";
         fileChooser.setCurrentDirectory(new File(".."));
         fileChooser.setDialogTitle("Choose place to save your files");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -71,6 +71,7 @@ public class SettingForm {
         okButton.requestFocus();
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
+        lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
         //mainFrame.requestFocus();
     }
     /**
