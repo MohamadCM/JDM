@@ -148,6 +148,16 @@ public class MainForm {
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         //downloadManager.pack();
+
+
+        newDownload.addMouseListener(mouseListener);
+        setting.addMouseListener(mouseListener);
+        remove.addMouseListener(mouseListener);
+        resume.addMouseListener(mouseListener);
+        pause.addMouseListener(mouseListener);
+        cancel.addMouseListener(mouseListener);
+        aboutMe.addMouseListener(mouseListener);
+        exit.addMouseListener(mouseListener);
     }
 
     /**
@@ -174,6 +184,22 @@ public class MainForm {
                 System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if(mouseEvent.getSource().equals(cancelButton))
                 System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(newDownload))
+                addDownload();
+            if (mouseEvent.getSource().equals(remove))
+                delete();
+            if(mouseEvent.getSource().equals(resume))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(pause))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(cancel))
+                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if(mouseEvent.getSource().equals(setting))
+                settingForm.showSetting();
+            if(mouseEvent.getSource().equals(aboutMe))
+                showAboutMe();
+            if(mouseEvent.getSource().equals(exit))
+                System.exit(0);
         }
     }
 
