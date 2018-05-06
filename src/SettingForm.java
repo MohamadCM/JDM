@@ -45,14 +45,14 @@ public class SettingForm {
         for(UIManager.LookAndFeelInfo info: UIManager.getInstalledLookAndFeels())
             lookAndFeelInfoBox.addItem(info.getClassName());
         fileChooser = new JFileChooser();
-        saveAdress = "..";
-        fileChooser.setCurrentDirectory(new File(".."));
+        saveAdress = "./" + System.getProperty("user.dir");
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         fileChooser.setDialogTitle("Choose place to save your files");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         chooseAdress = new JButton("Choose address");
         //chooseAdress.setFocusable(false);
-        chooseAdress.addKeyListener(new MyKeyboardListener());
+        //chooseAdress.addKeyListener(new MyKeyboardListener());
         chooseAdress.addMouseListener(new MyMouseListener());
         fileChooser.setFocusable(false);
         mainFrame.add(label1);
@@ -105,13 +105,13 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
+                saveAdress = fileChooser.getSelectedFile().toString();
+                //mainFrame.dispose();
+                hidesetting();
             }
             if (mouseEvent.getSource().equals(chooseAdress))
                 fileChooser.showDialog(null,"Confirm this path");
-            saveAdress = fileChooser.getCurrentDirectory().toString();
-            mainFrame.dispose();
-            hidesetting();
-
+            saveAdress = fileChooser.getSelectedFile().toString();
         }
     }
     private class MyKeyboardListener extends KeyAdapter
@@ -132,9 +132,8 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                if(saveAdress != null)
-                    saveAdress = fileChooser.getCurrentDirectory().toString();
-                mainFrame.dispose();
+                saveAdress = fileChooser.getSelectedFile().toString();
+                //mainFrame.dispose();
                 hidesetting();
             }
 
@@ -147,4 +146,5 @@ public class SettingForm {
     {
         return saveAdress;
     }
+
 }

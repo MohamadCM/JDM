@@ -48,6 +48,7 @@ public class Download {
         downloadPanel.setPreferredSize(new Dimension(1000,100));
         startTime = LocalDateTime.now();
         downloadInfoForm = new DownloadInfoForm(name, address, link , volume, downloadedVolume, percentDownload, downloadRate, startTime);
+        this.address = address;
     }
 
     /**

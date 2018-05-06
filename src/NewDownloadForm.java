@@ -41,6 +41,7 @@ public class NewDownloadForm {
     long size;
     public NewDownloadForm(String saveAddress, Queue queue)
     {
+        this.saveAdress = saveAddress;
         this.queue = queue;
         mainFrame = new JFrame("Start a new download");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -51,11 +52,13 @@ public class NewDownloadForm {
         upPanel.setBorder(new EmptyBorder(5,5,5,5));
         JLabel label1 = new JLabel("Link:");
         label1.setFocusable(false);
-        link = new JTextField();
+        link = new JTextField("");
+        link.setText(null);
         link.addKeyListener(new MyKeyboardListener());
         //link.setFocusable(false);
         JLabel label2 = new JLabel("Name:");
-        name = new JTextField();
+        name = new JTextField("");
+        name.setText(null);
         name.addKeyListener(new MyKeyboardListener());
         //name.setFocusable(false);
         label2.setFocusable(false);
@@ -146,16 +149,16 @@ public class NewDownloadForm {
         public void mousePressed(MouseEvent mouseEvent) {
             if (mouseEvent.getSource().equals(selectAddress)){
                 fileChooser.showDialog(null, "Confirm");
-                if(fileChooser.getCurrentDirectory().toString() != null)
-                    saveAdress = fileChooser.getCurrentDirectory().toString();
+                if(fileChooser.getCurrentDirectory().toString() != null && !fileChooser.getCurrentDirectory().toString().equals(""))
+                    saveAdress = fileChooser.getSelectedFile().toString();
             }
             if(mouseEvent.getSource().equals(cancelButton))
                 hideForm();
             else if(mouseEvent.getSource().equals(okButton)){
-                if(link != null && name != null) {
+                if(!link.getText().equals("") && !name.getText().equals("")) {
                     queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
-                    MainForm.updateDownloadList();
                     mainFrame.dispose();
+                    MainForm.updateDownloadList();
                 }
             }
         }
@@ -164,10 +167,10 @@ public class NewDownloadForm {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
             if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
-                if(link != null && name != null) {
+                if(!link.getText().equals("") && !name.getText().equals("")) {
                     queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
-                    MainForm.updateDownloadList();
                     mainFrame.dispose();
+                    MainForm.updateDownloadList();
                 }
             }
         }
