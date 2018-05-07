@@ -26,6 +26,7 @@ public class Download {
     private String link;
     private LocalDateTime startTime;
     private DownloadInfoForm downloadInfoForm;
+    private boolean isSelected;
     public Download(String name, String address, long volume, String link)
     {
         this.name = name;
@@ -49,6 +50,7 @@ public class Download {
         startTime = LocalDateTime.now();
         downloadInfoForm = new DownloadInfoForm(name, address, link , volume, downloadedVolume, percentDownload, downloadRate, startTime);
         this.address = address;
+        isSelected = false;
     }
 
     /**
@@ -68,4 +70,18 @@ public class Download {
     }
 //    public void updateStatus()
 
+    /**
+     * @return {@code true} if the download is selected, {@code false} otherwise
+     */
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+
+    /**
+     * set selection status for the download
+     * @param selected
+     */
+    public void setIsSelected(boolean selected) {
+        isSelected = selected;
+    }
 }

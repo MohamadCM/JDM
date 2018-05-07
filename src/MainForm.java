@@ -250,11 +250,13 @@ public class MainForm {
                     {
                         if(tmpDownload.getDownloadPanel().getBackground().equals(Color.CYAN)) {
                             tmpDownload.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
+                            tmpDownload.setIsSelected(false);
                             tmpDownload.getDownloadPanel().revalidate();
                             tmpDownload.getDownloadPanel().repaint();
                         }
                     }
                     d.getDownloadPanel().setBackground(Color.CYAN);
+                    d.setIsSelected(true);
                     d.getDownloadPanel().revalidate();
                     d.getDownloadPanel().repaint();
                 }
@@ -268,7 +270,7 @@ public class MainForm {
             return;
         int i = 0;
         for(i = 0 ; i < queue.getDownloads().size() ; i++)
-            if(!queue.getDownloads().get(i).getDownloadPanel().equals(Color.LIGHT_GRAY))
+            if(queue.getDownloads().get(i).getIsSelected())
                 break;
         queue.removeDownload(i);
         updateDownloadList();
