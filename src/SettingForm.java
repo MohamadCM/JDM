@@ -105,13 +105,14 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                saveAdress = fileChooser.getSelectedFile().toString();
-                //mainFrame.dispose();
-                hidesetting();
+                if (fileChooser != null && fileChooser.getSelectedFile() != null)
+                    saveAdress = fileChooser.getSelectedFile().toString();
+                mainFrame.dispose();
             }
-            if (mouseEvent.getSource().equals(chooseAdress))
+            if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
                 fileChooser.showDialog(null,"Confirm this path");
-            saveAdress = fileChooser.getSelectedFile().toString();
+            if(fileChooser.getSelectedFile() != null)
+                saveAdress = fileChooser.getSelectedFile().toString();
         }
     }
     private class MyKeyboardListener extends KeyAdapter

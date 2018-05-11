@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 1
  */
 public class MainForm {
-    private MyJFrame downloadManager;
+    private JFrame downloadManager;
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
@@ -45,7 +45,7 @@ public class MainForm {
     public MainForm(String title)
     {
         mouseListener = new MyMouseListener();
-        downloadManager = new MyJFrame(title);
+        downloadManager = new JFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         downloadManager.setSize(1200,900);
         downloadManager.setLocationRelativeTo(null);
@@ -158,39 +158,6 @@ public class MainForm {
         cancel.addMouseListener(mouseListener);
         aboutMe.addMouseListener(mouseListener);
         exit.addMouseListener(mouseListener);
-
-        if(SystemTray.isSupported()){
-            SystemTray systemTray = SystemTray.getSystemTray();
-            Image iconImage = Toolkit.getDefaultToolkit().getImage("Images/ICON.png");
-            PopupMenu trayMenu = new PopupMenu();
-            MenuItem exitItem = new MenuItem("Exit");
-            MenuItem openItem = new MenuItem("Open");
-            trayMenu.add(exitItem);
-            trayMenu.add(openItem);
-            exitItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    System.exit(0);
-                }
-            });
-            openItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    downloadManager.setVisible(true);
-                }
-            });
-            TrayIcon trayIcon = new TrayIcon(iconImage,"JDM", trayMenu);
-            try {
-                trayIcon.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        downloadManager.setVisible(true);
-                    }
-                });
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
     }
 
     /**

@@ -8,7 +8,6 @@ public class MyJFrame extends JFrame{
         MyJFrame(String title){
             super(title);
             if(SystemTray.isSupported()){
-                System.out.println("system tray supported");
                 tray=SystemTray.getSystemTray();
                 Image image=Toolkit.getDefaultToolkit().getImage("Images/ICON.png");
                 ActionListener exitListener=new ActionListener() {
@@ -28,7 +27,7 @@ public class MyJFrame extends JFrame{
                     }
                 });
                 popup.add(defaultItem);
-                trayIcon=new TrayIcon(image, "SystemTray Demo", popup);
+                trayIcon=new TrayIcon(image, "JDM", popup);
                 trayIcon.setImageAutoSize(true);
             }else{
                 System.out.println("system tray not supported");
@@ -43,8 +42,9 @@ public class MyJFrame extends JFrame{
                     try {
                         tray.add(trayIcon);
                         setVisible(false);
-                        System.out.println("added to SystemTray");
                     } catch (AWTException ex) {
+                        System.out.println(ex.getMessage());
+                    } catch (NullPointerException ex){
                         System.out.println(ex.getMessage());
                     }
                 }
