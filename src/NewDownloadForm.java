@@ -130,7 +130,7 @@ public class NewDownloadForm {
     }
 
     /**
-     * Shows the new Ddnwload form
+     * Shows the new Download form
      */
     public void showForm(){
         mainFrame.setVisible(true);
@@ -153,10 +153,12 @@ public class NewDownloadForm {
                     saveAdress = fileChooser.getSelectedFile().toString();
             }
             if(mouseEvent.getSource().equals(cancelButton))
-                hideForm();
+                mainFrame.dispose();
             else if(mouseEvent.getSource().equals(okButton)){
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
+                    Download d = new Download(name.getText(), saveAdress, size, link.getText());
+                    queue.getDownloads().add(d);
+                    d.setIndexInDownloads(queue.getIndex(d));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
                 }

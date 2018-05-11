@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class DownloadInfoForm {
     private JFrame frame;
     private JButton okButton;
+    private int indexInDownloads;
+    private JSpinner numberInQueue;
     /**
      * Requires name of the download
      * @param name
@@ -29,7 +31,7 @@ public class DownloadInfoForm {
         JPanel borderPanel = new JPanel();
         borderPanel.setBorder(new EmptyBorder(5,5,5,5));
         frame.setContentPane(borderPanel);
-        frame.setLayout(new GridLayout(7,1,5,5));
+        frame.setLayout(new GridLayout(8,1,5,5));
         JPanel upPanel = new JPanel(new GridLayout(1,2,10,10));
         JLabel nameLable = new JLabel("Name: " + name);
         JLabel timeLabe = new JLabel("Start Time: " + startTime.toString());
@@ -45,14 +47,23 @@ public class DownloadInfoForm {
         midPanel.add(sizeLable);
         midPanel.add(xPercent);
         midPanel.add(yMB);
+        numberInQueue = new JSpinner(new SpinnerNumberModel());
+        numberInQueue.setFocusable(false);
+        numberInQueue.setValue((Integer)indexInDownloads);
+        JLabel numberInQueueLabel = new JLabel("Number in queue: ");
+        JPanel numberInQueuePanel = new JPanel();
+        numberInQueuePanel.add(numberInQueueLabel);
+        numberInQueuePanel.add(numberInQueue);
         frame.add(midPanel);
         frame.add(new JLabel("Download link: " + link));
         frame.add(new JLabel("Download to: " + address));
         frame.add(new JLabel("Download speed: " + downloadRate));
+        frame.add(numberInQueuePanel);
         okButton = new JButton("OK");
         okButton.addKeyListener(new MyKeyboardListener());
         okButton.addMouseListener(new MyMouseListener());
         frame.add(okButton);
+        frame.pack();
     }
 
     /**
@@ -66,17 +77,31 @@ public class DownloadInfoForm {
     private class MyMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-            if (mouseEvent.getSource().equals(okButton))
-                frame.setVisible(false);
-
+            if (mouseEvent.getSource().equals(okButton)) {
+                Queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
+                MainForm.updateDownloadList();
+                frame.dispose();
+            }
         }
     }
 
     private class MyKeyboardListener extends KeyAdapter {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
-            if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER)
-                frame.setVisible(false);
+            if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER) {
+                Queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
+                MainForm.updateDownloadList();
+                frame.dispose();
+            }
         }
+    }
+
+    /**
+     * sets number of this download in queue
+     * @param indexInDownloads
+     */
+    public void setIndexInDownloads(int indexInDownloads) {
+        this.indexInDownloads = indexInDownloads;
+        numberInQueue.setValue((Integer)indexInDownloads);
     }
 }

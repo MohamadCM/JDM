@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Each queue consist of a number Download Objects
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * @version 1
  */
 public class Queue {
-    private ArrayList<Download> downloads;
+    private static ArrayList<Download> downloads;
     private String name;
 
     /**
@@ -43,4 +44,29 @@ public class Queue {
     public ArrayList<Download> getDownloads() {
         return downloads;
     }
+
+    /**
+     * @param d in given download
+     * @return index of the download in queue
+     */
+    public static int getIndex(Download d)
+    {
+        return downloads.indexOf(d);
+    }
+
+    /**
+     * Updates the queue by swapping download and etc.
+     * @param indexOfDownload1
+     * @param indexOfDownload2
+     * @return {@code true} if the updating was successful, retrun {@code false} otherwise
+     */
+    public static boolean updateQueue(int indexOfDownload1, int indexOfDownload2) {
+        try {
+            Collections.swap(downloads, indexOfDownload1, indexOfDownload2);
+            return true;
+        }catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
 }

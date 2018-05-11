@@ -220,6 +220,7 @@ public class MainForm {
             downloadPanel.add(d.getDownloadPanel());
             d.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
             d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
+            d.setIndexInDownloads(Queue.getIndex(d));
         }
         downloadPanel.revalidate();
         downloadPanel.repaint();

@@ -27,6 +27,7 @@ public class Download {
     private LocalDateTime startTime;
     private DownloadInfoForm downloadInfoForm;
     private boolean isSelected;
+    private int indexInDownloads;
     public Download(String name, String address, long volume, String link)
     {
         this.name = name;
@@ -83,5 +84,14 @@ public class Download {
      */
     public void setIsSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    /**
+     * sets number of this download in queue
+     * @param indexInDownloads
+     */
+    public void setIndexInDownloads(int indexInDownloads) {
+        this.indexInDownloads = indexInDownloads;
+        downloadInfoForm.setIndexInDownloads(indexInDownloads);
     }
 }
