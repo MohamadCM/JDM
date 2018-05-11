@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 1
  */
 public class MainForm {
-    private JFrame downloadManager;
+    private MyJFrame downloadManager;
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
@@ -45,8 +45,8 @@ public class MainForm {
     public MainForm(String title)
     {
         mouseListener = new MyMouseListener();
-        downloadManager = new JFrame(title);
-        //downloadManager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        downloadManager = new MyJFrame(title);
+        downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         downloadManager.setSize(1200,900);
         downloadManager.setLocationRelativeTo(null);
         settingForm = new SettingForm();
