@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 1
  */
 public class MainForm {
-    private JFrame downloadManager;
+    private MyJFrame downloadManager;
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
@@ -45,7 +45,7 @@ public class MainForm {
     public MainForm(String title)
     {
         mouseListener = new MyMouseListener();
-        downloadManager = new JFrame(title);
+        downloadManager = new MyJFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         downloadManager.setSize(1200,900);
         downloadManager.setLocationRelativeTo(null);
@@ -85,44 +85,55 @@ public class MainForm {
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
         downloadMenu = new JMenu("                  Download                         ");
+        downloadMenu.addActionListener(new MyActionListener());
+        downloadMenu.setMnemonic(KeyEvent.VK_D);
+        downloadMenu.addKeyListener(new MyKeyListener());
         downloadMenu.setFocusable(false);
         newDownload = new JMenuItem("New Download");
+        newDownload.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
+        newDownload.addActionListener(new MyActionListener());
         newDownload.setFocusable(false);
-        newDownload.setMnemonic('+');
         pause = new JMenuItem("Pause");
+        pause.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
+        pause.addActionListener(new MyActionListener());
         pause.setFocusable(false);
-        pause.setMnemonic('|');
         resume = new JMenuItem("Resume");
+        resume.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
+        resume.addActionListener(new MyActionListener());
         resume.setFocusable(false);
-        resume.setMnemonic(')');
         cancel = new JMenuItem("Cancel");
+        cancel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
+        cancel.addActionListener(new MyActionListener());
         cancel.setFocusable(false);
-        cancel.setMnemonic('*');
         remove = new JMenuItem("Remove");
+        remove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+        remove.addActionListener(new MyActionListener());
         remove.setFocusable(false);
-        remove.setMnemonic('c');
         setting = new JMenuItem("Setting");
+        setting.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+        setting.addActionListener(new MyActionListener());
         setting.setFocusable(false);
-        setting.setMnemonic('s');
         downloadMenu.add(newDownload);
         downloadMenu.add(pause);
         downloadMenu.add(resume);
         downloadMenu.add(cancel);
         downloadMenu.add(remove);
         downloadMenu.add(setting);
-        help = new JMenu("                                   Help                                   ");
+        help = new JMenu("                                        Help                                        ");
         help.setFocusable(false);
         aboutMe = new JMenuItem("                              About me:)                              ");
         aboutMe.setFocusable(false);
-        aboutMe.setMnemonic('i');
+        aboutMe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.ALT_MASK));
+        aboutMe.addActionListener(new MyActionListener());
         help.add(aboutMe);
         help.setFocusable(false);
-        exitMenu = new JMenu("                              Exit                               ");
+        exitMenu = new JMenu("                                   Exit                                    ");
         exitMenu.setFocusable(false);
         exit = new JMenuItem("                                   Exit:(                             ");
         exit.setFocusable(false);
-        exit.setMnemonic('x');
         exitMenu.add(exit);
+        exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
+        exit.addActionListener(new MyActionListener());
         menuBar.add(downloadMenu);
         menuBar.add(help);
         menuBar.add(exitMenu);
@@ -280,5 +291,38 @@ public class MainForm {
                 break;
         queue.removeDownload(i);
         updateDownloadList();
+    }
+
+
+    private class MyKeyListener extends KeyAdapter {
+
+        @Override
+        public void keyTyped(KeyEvent keyEvent) {
+
+        }
+    }
+
+    private class MyActionListener implements ActionListener
+    {
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if(actionEvent.getActionCommand().equals("New Download"))
+                addDownload();
+            if(actionEvent.getActionCommand().equals("Setting"))
+                settingForm.showSetting();
+            if(actionEvent.getActionCommand().equals("Resume"))
+                System.out.println(actionEvent.getSource());
+            if(actionEvent.getActionCommand().equals("Pause"))
+                System.out.println(actionEvent.getSource());
+            if(actionEvent.getActionCommand().equals("Cancel"))
+                System.out.println(actionEvent.getSource());
+            if(actionEvent.getActionCommand().equals("Remove"))
+                delete();
+            if(actionEvent.getActionCommand().equals("                              About me:)                              "))
+                showAboutMe();
+            if(actionEvent.getActionCommand().equals("                                   Exit:(                             "))
+                System.exit(0);
+        }
     }
 }
