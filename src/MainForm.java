@@ -91,13 +91,16 @@ public class MainForm {
         downloadMenu.setFocusable(false);
         newDownload = new JMenuItem("New Download");
         newDownload.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
+        newDownload.setMnemonic(KeyEvent.VK_N);
         newDownload.addActionListener(new MyActionListener());
         newDownload.setFocusable(false);
         pause = new JMenuItem("Pause");
+        pause.setMnemonic(KeyEvent.VK_P);
         pause.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
         pause.addActionListener(new MyActionListener());
         pause.setFocusable(false);
         resume = new JMenuItem("Resume");
+        resume.setMnemonic(KeyEvent.VK_R);
         resume.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
         resume.addActionListener(new MyActionListener());
         resume.setFocusable(false);
@@ -105,14 +108,17 @@ public class MainForm {
         cancel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
         cancel.addActionListener(new MyActionListener());
         cancel.setFocusable(false);
+        cancel.setMnemonic(KeyEvent.VK_C);
         remove = new JMenuItem("Remove");
         remove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
         remove.addActionListener(new MyActionListener());
         remove.setFocusable(false);
+        remove.setMnemonic(KeyEvent.VK_D);
         setting = new JMenuItem("Setting");
         setting.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
         setting.addActionListener(new MyActionListener());
         setting.setFocusable(false);
+        setting.setMnemonic(KeyEvent.VK_S);
         downloadMenu.add(newDownload);
         downloadMenu.add(pause);
         downloadMenu.add(resume);
@@ -123,6 +129,7 @@ public class MainForm {
         help.setFocusable(false);
         aboutMe = new JMenuItem("                              About me:)                              ");
         aboutMe.setFocusable(false);
+        aboutMe.setMnemonic(KeyEvent.VK_H);
         aboutMe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.ALT_MASK));
         aboutMe.addActionListener(new MyActionListener());
         help.add(aboutMe);
@@ -131,6 +138,7 @@ public class MainForm {
         exitMenu.setFocusable(false);
         exit = new JMenuItem("                                   Exit:(                             ");
         exit.setFocusable(false);
+        exit.setMnemonic(KeyEvent.VK_X);;
         exitMenu.add(exit);
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
         exit.addActionListener(new MyActionListener());
@@ -244,7 +252,10 @@ public class MainForm {
                 "End date:      -\n" +
                 "This programme is a simple download manager,\n" +
                 "you can use start a new download by using + button\n" +
-                "and or remove it using specified buttons\n");
+                "and or remove it using specified buttons\n" +
+                "Mnemonics keys are the same as accelerator keys (without ALT)\n" +
+                "Close button wont work if your OS won't allow system tray\n" +
+                "Thanks for using MY DownloadManager");
     }
     /*
     Listener for downloads
