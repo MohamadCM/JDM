@@ -50,8 +50,11 @@ public class DownloadInfoForm {
         numberInQueue = new JSpinner(new SpinnerNumberModel());
         numberInQueue.setFocusable(false);
         numberInQueue.setValue((Integer)indexInDownloads);
+        numberInQueue.addKeyListener(new MyKeyboardListener());
         JLabel numberInQueueLabel = new JLabel("Number in queue: ");
+        numberInQueueLabel.setFocusable(false);
         JPanel numberInQueuePanel = new JPanel();
+        numberInQueuePanel.setFocusable(false);
         numberInQueuePanel.add(numberInQueueLabel);
         numberInQueuePanel.add(numberInQueue);
         frame.add(midPanel);
@@ -62,6 +65,7 @@ public class DownloadInfoForm {
         okButton = new JButton("OK");
         okButton.addKeyListener(new MyKeyboardListener());
         okButton.addMouseListener(new MyMouseListener());
+        okButton.requestFocus();
         frame.add(okButton);
         frame.pack();
     }

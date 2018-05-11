@@ -46,7 +46,7 @@ public class MainForm {
     {
         mouseListener = new MyMouseListener();
         downloadManager = new JFrame(title);
-        downloadManager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //downloadManager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         downloadManager.setSize(1200,900);
         downloadManager.setLocationRelativeTo(null);
         settingForm = new SettingForm();
@@ -158,6 +158,39 @@ public class MainForm {
         cancel.addMouseListener(mouseListener);
         aboutMe.addMouseListener(mouseListener);
         exit.addMouseListener(mouseListener);
+
+        if(SystemTray.isSupported()){
+            SystemTray systemTray = SystemTray.getSystemTray();
+            Image iconImage = Toolkit.getDefaultToolkit().getImage("Images/ICON.png");
+            PopupMenu trayMenu = new PopupMenu();
+            MenuItem exitItem = new MenuItem("Exit");
+            MenuItem openItem = new MenuItem("Open");
+            trayMenu.add(exitItem);
+            trayMenu.add(openItem);
+            exitItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    System.exit(0);
+                }
+            });
+            openItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    downloadManager.setVisible(true);
+                }
+            });
+            TrayIcon trayIcon = new TrayIcon(iconImage,"JDM", trayMenu);
+            try {
+                trayIcon.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        downloadManager.setVisible(true);
+                    }
+                });
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
@@ -243,6 +276,11 @@ public class MainForm {
         public void mousePressed(MouseEvent mouseEvent) {
             for(Download d : queue.getDownloads())
             {
+                if(mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel()))
+                {
+                    System.out.println("Double Click on download" + mouseEvent.getSource());
+                    break;
+                }
                 if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
                     d.showDownloadInfoForm();
                 if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON1)
