@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 /**
  * This class creates main form of the programme
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * @version 1
  */
 public class MainForm {
-    private MyJFrame downloadManager;
+    private static MyJFrame downloadManager;
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
@@ -323,11 +322,11 @@ public class MainForm {
             if(actionEvent.getActionCommand().equals("Setting"))
                 settingForm.showSetting();
             if(actionEvent.getActionCommand().equals("Resume"))
-                System.out.println(actionEvent.getSource());
+                System.out.println("Source: " + actionEvent.getSource());
             if(actionEvent.getActionCommand().equals("Pause"))
-                System.out.println(actionEvent.getSource());
+                System.out.println("Source: " + actionEvent.getSource());
             if(actionEvent.getActionCommand().equals("Cancel"))
-                System.out.println(actionEvent.getSource());
+                System.out.println("Source: " + actionEvent.getSource());
             if(actionEvent.getActionCommand().equals("Remove"))
                 delete();
             if(actionEvent.getActionCommand().equals("                              About me:)                              "))
@@ -335,5 +334,12 @@ public class MainForm {
             if(actionEvent.getActionCommand().equals("                                   Exit:(                             "))
                 System.exit(0);
         }
+    }
+
+    public static void rpaintForm()
+    {
+        downloadManager.revalidate();
+        downloadManager.repaint();
+
     }
 }

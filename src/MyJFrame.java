@@ -1,3 +1,11 @@
+/**
+ * This class is extended version of JFrame
+ * That have icon on launch and show the app
+ * on system tray by closing it (if supported by os)
+ * @author Mohamad Chaman-Motlagh
+ * @version 1
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

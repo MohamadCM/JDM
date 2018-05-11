@@ -89,8 +89,10 @@ public class SettingForm {
     {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-            if(mouseEvent.getSource().equals(cancelButton))
+            if(mouseEvent.getSource().equals(cancelButton)) {
+                mainFrame.dispose();
                 hidesetting();
+            }
             else if(mouseEvent.getSource().equals(okButton))
             {
                 numberOfSimDowns = (Integer)numberofDownsSpinner.getValue();
@@ -108,6 +110,7 @@ public class SettingForm {
                 if (fileChooser != null && fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
                 mainFrame.dispose();
+                MainForm.rpaintForm();
             }
             if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
                 fileChooser.showDialog(null,"Confirm this path");
@@ -133,8 +136,10 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                saveAdress = fileChooser.getSelectedFile().toString();
-                //mainFrame.dispose();
+                if(fileChooser.getSelectedFile() != null)
+                    saveAdress = fileChooser.getSelectedFile().toString();
+                mainFrame.dispose();
+                MainForm.rpaintForm();
                 hidesetting();
             }
 
