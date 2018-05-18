@@ -10,6 +10,6 @@ public class JDM {
 
         MainForm mainForm = new MainForm("Download Manager");
         mainForm.showGUI();
-        
+
     }
 }

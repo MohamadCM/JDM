@@ -3,6 +3,7 @@ import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This class creates main form of the programme
@@ -181,7 +182,12 @@ public class MainForm {
         aboutMe.addMouseListener(mouseListener);
         exit.addMouseListener(mouseListener);
 
-        queue.addDownload(readDownload());
+        System.out.println(readDownload().size());
+        for(Download d : readDownload())
+        {
+            queue.addDownload(d);
+        }
+
         updateDownloadList();
     }
 
@@ -352,27 +358,28 @@ public class MainForm {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file, true)) {
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                objectOutputStream.writeObject(download);
+        }
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+                    objectOutputStream.writeObject(download);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
     }
-    public static Download readDownload()
+    public static ArrayList<Download> readDownload()
     {
-        Download output = null;
+        ArrayList<Download> output = new ArrayList<Download>();
+        Download download = null;
         File file = new File("./files/list.jdm");
         if(!file.exists())
             return null;
-        try (FileInputStream fileInputStream = new FileInputStream(file)){
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            output = ((Download) objectInputStream.readObject());
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
+             download = (Download) objectInputStream.readObject();
+             output.add(download);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
