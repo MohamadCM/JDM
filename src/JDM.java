@@ -6,9 +6,10 @@ import javax.swing.*;
  * @version 1
  */
 public class JDM {
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    public static void main(String[] args) {
+
         MainForm mainForm = new MainForm("Download Manager");
         mainForm.showGUI();
+        
     }
 }

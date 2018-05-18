@@ -8,7 +8,7 @@ import java.io.*;
 public class Defaults implements Serializable {
     private String location;
     private int numberOfSimDownloads;
-    private static String lookAndFeelInfo;
+    private String lookAndFeelInfo;
 
     public Defaults(String location, int numberOfSimDownloads, String lookAndFeelInfo){
 

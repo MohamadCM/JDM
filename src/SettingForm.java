@@ -46,15 +46,17 @@ public class SettingForm {
         numberofDownsSpinner = new JSpinner(new SpinnerNumberModel());
         //numberofDownsSpinner.setFocusable(false);
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
-        numberofDownsSpinner.setValue((Integer) 1);
+        numberofDownsSpinner.setValue((Integer) numberOfSimDowns);
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         lookAndFeelInfoBox = new JComboBox<String>();
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
             lookAndFeelInfoBox.addItem(info.getClassName());
         fileChooser = new JFileChooser();
+
         saveAdress = "./" + System.getProperty("user.dir");
         if(defaults != null)
             saveAdress = defaults.getLocation();
+
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         fileChooser.setDialogTitle("Choose place to save your files");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -80,10 +82,23 @@ public class SettingForm {
         okButton.requestFocus();
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
-        if(defaults != null)
+
+        lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+        if(defaults != null) {
             lookAndFeelInfoBox.setSelectedItem(defaults.getLookAndFeelInfo());
-        else
-            lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+            try {
+                UIManager.setLookAndFeel(defaults.getLookAndFeelInfo());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+        }
+
         //mainFrame.requestFocus();
     }
 
@@ -119,12 +134,18 @@ public class SettingForm {
                 }
                 if (fileChooser != null && fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
+
+
+                JOptionPane.showMessageDialog(null, "Please restart the programme to set the new look and feel completely");
+
                 mainFrame.dispose();
                 MainForm.rpaintForm();
 
                 defaults = new Defaults(saveAdress,(Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
+
                 writeDefaults(defaults);
             }
+
             if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
                 fileChooser.showDialog(null, "Confirm this path");
             if (fileChooser.getSelectedFile() != null)
@@ -150,6 +171,8 @@ public class SettingForm {
                 }
                 if (fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
+
+                JOptionPane.showMessageDialog(null, "Please restart the programme to set the new look and feel completely");
                 mainFrame.dispose();
                 MainForm.rpaintForm();
                 hidesetting();
@@ -171,24 +194,23 @@ public class SettingForm {
 
     private static void writeDefaults(Defaults defaults) {
         File file;
-
         file = new File("./files/setting.jdm");
-        if (!file.exists()) {
+        if(file.exists())
+            file.delete();
             try {
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
                 objectOutputStream.writeObject(defaults);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 
 
@@ -197,10 +219,10 @@ public class SettingForm {
         Defaults output = null;
         File file = new File("./files/setting.jdm");
         if(!file.exists())
-            return null;
-        try (FileInputStream fileInputStream = new FileInputStream(file)){
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            output = ((Defaults) objectInputStream.readObject());
+            return output;
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
+            output = (Defaults) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
