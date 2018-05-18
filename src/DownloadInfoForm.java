@@ -5,6 +5,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
-public class DownloadInfoForm {
+public class DownloadInfoForm implements Serializable {
     private JFrame frame;
     private JButton okButton;
     private int indexInDownloads;

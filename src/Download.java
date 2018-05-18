@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -14,7 +15,7 @@ import java.util.Calendar;
  * @author  Mohamad Chaman-Motlah
  * @version 1
  */
-public class Download {
+public class Download implements Serializable {
     private JPanel downloadPanel;
     private JProgressBar progressBar;
     private String name;
@@ -48,10 +49,15 @@ public class Download {
         downloadPanel.add(label4);
         downloadPanel.add(label5);
         downloadPanel.setPreferredSize(new Dimension(1000,100));
+
         startTime = LocalDateTime.now();
         downloadInfoForm = new DownloadInfoForm(name, address, link , volume, downloadedVolume, percentDownload, downloadRate, startTime);
         this.address = address;
+        downloadPanel.setPreferredSize(new Dimension(970,100));
+
         isSelected = false;
+
+        MainForm.writeDownload(this);
     }
 
     /**

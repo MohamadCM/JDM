@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 /**
  * This class creates main form of the programme
@@ -16,7 +17,7 @@ public class MainForm {
     private JMenu help;
     private JMenu exitMenu;
     private JPanel mainPanel;
-    private JPanel leftPanel;
+    private JToolBar leftPanel;
     private JButton newDownloadButton;
     private JButton pauseButton;
     private JButton resumeButton;
@@ -37,20 +38,21 @@ public class MainForm {
     private static Queue queue;
     private static JScrollPane scrollPane;
     private final int MaxNumberOfDownloads = 20;
+
     /**
      * Each mainForm needs a title to get created
+     *
      * @param title
      */
-    public MainForm(String title)
-    {
+    public MainForm(String title) {
         mouseListener = new MyMouseListener();
         downloadManager = new MyJFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        downloadManager.setSize(1200,900);
+        downloadManager.setSize(990, 900);
         downloadManager.setLocationRelativeTo(null);
         settingForm = new SettingForm();
         mainPanel = new JPanel(new BorderLayout());
-        leftPanel = new JPanel(new GridLayout(6,1,5,5));
+        leftPanel = new JToolBar();
         downloadManager.setContentPane(mainPanel);
         newDownloadButton = new JButton("", new ImageIcon("Images/add.png"));
         newDownloadButton.setFocusable(false);
@@ -74,13 +76,14 @@ public class MainForm {
         settingButton = new JButton("", new ImageIcon("Images/setting.png"));
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
+        leftPanel.add(new JLabel(new ImageIcon("Images/ICON.png")));
         leftPanel.add(newDownloadButton);
         leftPanel.add(pauseButton);
         leftPanel.add(resumeButton);
         leftPanel.add(cancelButton);
         leftPanel.add(removeButton);
         leftPanel.add(settingButton);
-        downloadManager.add(leftPanel, BorderLayout.WEST);
+        downloadManager.add(leftPanel, BorderLayout.NORTH);
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
         downloadMenu = new JMenu("                  Download                         ");
@@ -137,7 +140,8 @@ public class MainForm {
         exitMenu.setFocusable(false);
         exit = new JMenuItem("                                   Exit:(                             ");
         exit.setFocusable(false);
-        exit.setMnemonic(KeyEvent.VK_X);;
+        exit.setMnemonic(KeyEvent.VK_X);
+        ;
         exitMenu.add(exit);
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
         exit.addActionListener(new MyActionListener());
@@ -151,7 +155,7 @@ public class MainForm {
         Need a better solution here :((
          */
 
-        downloadPanel = new JPanel(new GridLayout(MaxNumberOfDownloads,1,1,1));
+        downloadPanel = new JPanel(new GridLayout(MaxNumberOfDownloads, 1, 1, 1));
         queue = new Queue("Default");
         scrollPane = new JScrollPane(downloadPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -176,53 +180,53 @@ public class MainForm {
         cancel.addMouseListener(mouseListener);
         aboutMe.addMouseListener(mouseListener);
         exit.addMouseListener(mouseListener);
+
+        queue.addDownload(readDownload());
+        updateDownloadList();
     }
 
     /**
      * Makes the mainForm visible
      */
-    public void showGUI()
-    {
+    public void showGUI() {
         downloadManager.setVisible(true);
     }
 
-    private class MyMouseListener extends MouseAdapter
-    {
+    private class MyMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-            if(mouseEvent.getSource().equals(settingButton))
+            if (mouseEvent.getSource().equals(settingButton))
                 settingForm.showSetting();
-            if(mouseEvent.getSource().equals(newDownloadButton))
+            if (mouseEvent.getSource().equals(newDownloadButton))
                 addDownload();
             if (mouseEvent.getSource().equals(removeButton))
                 delete();
-            if(mouseEvent.getSource().equals(resumeButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(pauseButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(cancelButton))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(newDownload))
+            if (mouseEvent.getSource().equals(resumeButton))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(pauseButton))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(cancelButton))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(newDownload))
                 addDownload();
             if (mouseEvent.getSource().equals(remove))
                 delete();
-            if(mouseEvent.getSource().equals(resume))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(pause))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(cancel))
-                System.out.println("Pressed "+" Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if(mouseEvent.getSource().equals(setting))
+            if (mouseEvent.getSource().equals(resume))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(pause))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(cancel))
+                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+            if (mouseEvent.getSource().equals(setting))
                 settingForm.showSetting();
-            if(mouseEvent.getSource().equals(aboutMe))
+            if (mouseEvent.getSource().equals(aboutMe))
                 showAboutMe();
-            if(mouseEvent.getSource().equals(exit))
+            if (mouseEvent.getSource().equals(exit))
                 System.exit(0);
         }
     }
 
-    private void addDownload()
-    {
+    private void addDownload() {
         NewDownloadForm downloadForm = new NewDownloadForm(settingForm.getSaveAdress(), queue);
         downloadForm.showForm();
     }
@@ -230,21 +234,19 @@ public class MainForm {
     /**
      * This class is used to update the download list and show them
      */
-    public static void updateDownloadList()
-    {
+    public static void updateDownloadList() {
         downloadPanel.removeAll();
-        for(Download d : queue.getDownloads())
-        {
+        for (Download d : queue.getDownloads()) {
             downloadPanel.add(d.getDownloadPanel());
-            d.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
+            d.getDownloadPanel().setBackground(Color.WHITE);
             d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(Queue.getIndex(d));
         }
         downloadPanel.revalidate();
         downloadPanel.repaint();
     }
-    private void showAboutMe()
-    {
+
+    private void showAboutMe() {
         JOptionPane.showMessageDialog(null, "Programmer:       Mohamad Chaman-Motlagh\n" +
                 "Student number:      9631018\n" +
                 "Start date:      2/5/2018\n" +
@@ -256,27 +258,24 @@ public class MainForm {
                 "Close button wont work if your OS won't allow system tray\n" +
                 "Thanks for using MY DownloadManager");
     }
+
     /*
     Listener for downloads
      */
     private static class DPanelMouseLister extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-            for(Download d : queue.getDownloads())
-            {
-                if(mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel()))
-                {
+            for (Download d : queue.getDownloads()) {
+                if (mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel())) {
                     System.out.println("Double Click on download" + mouseEvent.getSource());
                     break;
                 }
-                if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
+                if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
                     d.showDownloadInfoForm();
-                if(mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON1)
-                {
-                    for(Download tmpDownload : queue.getDownloads())
-                    {
-                        if(tmpDownload.getDownloadPanel().getBackground().equals(Color.CYAN)) {
-                            tmpDownload.getDownloadPanel().setBackground(Color.LIGHT_GRAY);
+                if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON1) {
+                    for (Download tmpDownload : queue.getDownloads()) {
+                        if (tmpDownload.getDownloadPanel().getBackground().equals(Color.CYAN)) {
+                            tmpDownload.getDownloadPanel().setBackground(Color.WHITE);
                             tmpDownload.setIsSelected(false);
                             tmpDownload.getDownloadPanel().revalidate();
                             tmpDownload.getDownloadPanel().repaint();
@@ -291,13 +290,12 @@ public class MainForm {
         }
     }
 
-    private void delete()
-    {
-        if(queue.getDownloads().size() == 0)
+    private void delete() {
+        if (queue.getDownloads().size() == 0)
             return;
         int i = 0;
-        for(i = 0 ; i < queue.getDownloads().size() ; i++)
-            if(queue.getDownloads().get(i).getIsSelected())
+        for (i = 0; i < queue.getDownloads().size(); i++)
+            if (queue.getDownloads().get(i).getIsSelected())
                 break;
         queue.removeDownload(i);
         updateDownloadList();
@@ -312,34 +310,78 @@ public class MainForm {
         }
     }
 
-    private class MyActionListener implements ActionListener
-    {
+    private class MyActionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            if(actionEvent.getActionCommand().equals("New Download"))
+            if (actionEvent.getActionCommand().equals("New Download"))
                 addDownload();
-            if(actionEvent.getActionCommand().equals("Setting"))
+            if (actionEvent.getActionCommand().equals("Setting"))
                 settingForm.showSetting();
-            if(actionEvent.getActionCommand().equals("Resume"))
+            if (actionEvent.getActionCommand().equals("Resume"))
                 System.out.println("Source: " + actionEvent.getSource());
-            if(actionEvent.getActionCommand().equals("Pause"))
+            if (actionEvent.getActionCommand().equals("Pause"))
                 System.out.println("Source: " + actionEvent.getSource());
-            if(actionEvent.getActionCommand().equals("Cancel"))
+            if (actionEvent.getActionCommand().equals("Cancel"))
                 System.out.println("Source: " + actionEvent.getSource());
-            if(actionEvent.getActionCommand().equals("Remove"))
+            if (actionEvent.getActionCommand().equals("Remove"))
                 delete();
-            if(actionEvent.getActionCommand().equals("                              About me:)                              "))
+            if (actionEvent.getActionCommand().equals("                              About me:)                              "))
                 showAboutMe();
-            if(actionEvent.getActionCommand().equals("                                   Exit:(                             "))
+            if (actionEvent.getActionCommand().equals("                                   Exit:(                             "))
                 System.exit(0);
         }
     }
 
-    public static void rpaintForm()
-    {
+    public static void rpaintForm() {
         downloadManager.revalidate();
         downloadManager.repaint();
 
     }
+
+    /**
+     * Writes each Download in a file (list.jdm)
+     */
+    public static void writeDownload(Download download) {
+        File file;
+
+        file = new File("./files/list.jdm");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file, true)) {
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(download);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    public static Download readDownload()
+    {
+        Download output = null;
+        File file = new File("./files/list.jdm");
+        if(!file.exists())
+            return null;
+        try (FileInputStream fileInputStream = new FileInputStream(file)){
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            output = ((Download) objectInputStream.readObject());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+
+
 }

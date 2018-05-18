@@ -51,9 +51,9 @@ public class MyJFrame extends JFrame{
                         tray.add(trayIcon);
                         setVisible(false);
                     } catch (AWTException ex) {
-                        System.out.println(ex.getMessage());
+                        System.out.println(ex.getStackTrace());
                     } catch (NullPointerException ex){
-                        System.out.println(ex.getMessage());
+                        System.out.println(ex.getStackTrace());
                     }
                 }
                 @Override

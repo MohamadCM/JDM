@@ -1,8 +1,10 @@
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 
 /**
  * This class creates setting form
@@ -19,17 +21,22 @@ public class SettingForm {
     private JButton chooseAdress;
     private String saveAdress;
     private int numberOfSimDowns;
-    public SettingForm()
-    {
+    private Defaults defaults;
+
+    public SettingForm() {
         mainFrame = new JFrame("Setting");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        mainFrame.setLocation(600,300);
-        mainFrame.setSize(700,500);
+        mainFrame.setLocation(600, 300);
+        mainFrame.setSize(700, 500);
+        if(readDefaults() != null)
+            defaults = readDefaults();
         numberOfSimDowns = 1;
+        if(defaults != null)
+            numberOfSimDowns = defaults.getNumberOfSimDownloads();
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
         mainFrame.setContentPane(panel);
-        mainFrame.setLayout(new GridLayout(4,2,10,10));
+        mainFrame.setLayout(new GridLayout(4, 2, 10, 10));
         JLabel label1 = new JLabel("Number of simultaneous downloads:");
         label1.setFocusable(false);
         JLabel label2 = new JLabel("Default download location:");
@@ -39,13 +46,15 @@ public class SettingForm {
         numberofDownsSpinner = new JSpinner(new SpinnerNumberModel());
         //numberofDownsSpinner.setFocusable(false);
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
-        numberofDownsSpinner.setValue((Integer)1);
+        numberofDownsSpinner.setValue((Integer) 1);
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         lookAndFeelInfoBox = new JComboBox<String>();
-        for(UIManager.LookAndFeelInfo info: UIManager.getInstalledLookAndFeels())
+        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
             lookAndFeelInfoBox.addItem(info.getClassName());
         fileChooser = new JFileChooser();
         saveAdress = "./" + System.getProperty("user.dir");
+        if(defaults != null)
+            saveAdress = defaults.getLocation();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         fileChooser.setDialogTitle("Choose place to save your files");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -71,31 +80,32 @@ public class SettingForm {
         okButton.requestFocus();
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
-        lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+        if(defaults != null)
+            lookAndFeelInfoBox.setSelectedItem(defaults.getLookAndFeelInfo());
+        else
+            lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
         //mainFrame.requestFocus();
     }
+
     /**
      * Shows setting form
      */
-    public void showSetting()
-    {
+    public void showSetting() {
         mainFrame.setVisible(true);
     }
-    private void hidesetting()
-    {
+
+    private void hidesetting() {
         mainFrame.setVisible(false);
     }
-    private class MyMouseListener extends MouseAdapter
-    {
+
+    private class MyMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-            if(mouseEvent.getSource().equals(cancelButton)) {
+            if (mouseEvent.getSource().equals(cancelButton)) {
                 mainFrame.dispose();
                 hidesetting();
-            }
-            else if(mouseEvent.getSource().equals(okButton))
-            {
-                numberOfSimDowns = (Integer)numberofDownsSpinner.getValue();
+            } else if (mouseEvent.getSource().equals(okButton)) {
+                numberOfSimDowns = (Integer) numberofDownsSpinner.getValue();
                 try {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
                 } catch (ClassNotFoundException e) {
@@ -111,20 +121,22 @@ public class SettingForm {
                     saveAdress = fileChooser.getSelectedFile().toString();
                 mainFrame.dispose();
                 MainForm.rpaintForm();
+
+                defaults = new Defaults(saveAdress,(Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
+                writeDefaults(defaults);
             }
             if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
-                fileChooser.showDialog(null,"Confirm this path");
-            if(fileChooser.getSelectedFile() != null)
+                fileChooser.showDialog(null, "Confirm this path");
+            if (fileChooser.getSelectedFile() != null)
                 saveAdress = fileChooser.getSelectedFile().toString();
         }
     }
-    private class MyKeyboardListener extends KeyAdapter
-    {
+
+    private class MyKeyboardListener extends KeyAdapter {
         @Override
-        public void keyTyped(KeyEvent keyEvent)
-        {
-            if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
-                numberOfSimDowns = (Integer)numberofDownsSpinner.getValue();
+        public void keyTyped(KeyEvent keyEvent) {
+            if (keyEvent.getKeyChar() == KeyEvent.VK_ENTER) {
+                numberOfSimDowns = (Integer) numberofDownsSpinner.getValue();
                 try {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
                 } catch (ClassNotFoundException e) {
@@ -136,21 +148,67 @@ public class SettingForm {
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
-                if(fileChooser.getSelectedFile() != null)
+                if (fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
                 mainFrame.dispose();
                 MainForm.rpaintForm();
                 hidesetting();
+
+                defaults = new Defaults(saveAdress, (Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
+                writeDefaults(defaults);
             }
 
         }
     }
+
     /**
      * @return location of saiving a file
      */
-    public String getSaveAdress()
-    {
+    public String getSaveAdress() {
         return saveAdress;
+    }
+
+
+    private static void writeDefaults(Defaults defaults) {
+        File file;
+
+        file = new File("./files/setting.jdm");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(defaults);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private static Defaults readDefaults()
+    {
+        Defaults output = null;
+        File file = new File("./files/setting.jdm");
+        if(!file.exists())
+            return null;
+        try (FileInputStream fileInputStream = new FileInputStream(file)){
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            output = ((Defaults) objectInputStream.readObject());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 
 }

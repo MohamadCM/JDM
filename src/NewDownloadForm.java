@@ -157,7 +157,7 @@ public class NewDownloadForm {
             else if(mouseEvent.getSource().equals(okButton)){
                 if(!link.getText().equals("") && !name.getText().equals("")) {
                     Download d = new Download(name.getText(), saveAdress, size, link.getText());
-                    queue.getDownloads().add(d);
+                    queue.addDownload(d);
                     d.setIndexInDownloads(queue.getIndex(d));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();

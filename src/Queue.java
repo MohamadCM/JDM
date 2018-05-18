@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,7 +9,7 @@ import java.util.Collections;
  * @author Mohamad Chaman-Motalgh
  * @version 1
  */
-public class Queue {
+public class Queue implements Serializable {
     private static ArrayList<Download> downloads;
     private String name;
 
@@ -27,6 +28,8 @@ public class Queue {
      */
     public void addDownload(Download download)
     {
+        if(download == null)
+            return;
         downloads.add(download);
     }
     /**
