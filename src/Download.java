@@ -57,7 +57,6 @@ public class Download implements Serializable {
 
         isSelected = false;
 
-        MainForm.writeDownload(this);
     }
 
     /**

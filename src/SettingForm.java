@@ -24,33 +24,48 @@ public class SettingForm {
     private Defaults defaults;
 
     public SettingForm() {
+
         mainFrame = new JFrame("Setting");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setLocation(600, 300);
-        mainFrame.setSize(700, 500);
+        mainFrame.setSize(500, 300);
+
+
         if(readDefaults() != null)
             defaults = readDefaults();
+
+
         numberOfSimDowns = 1;
         if(defaults != null)
             numberOfSimDowns = defaults.getNumberOfSimDownloads();
+
+
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
         mainFrame.setContentPane(panel);
         mainFrame.setLayout(new GridLayout(4, 2, 10, 10));
+
         JLabel label1 = new JLabel("Number of simultaneous downloads:");
         label1.setFocusable(false);
         JLabel label2 = new JLabel("Default download location:");
         label2.setFocusable(false);
         JLabel label3 = new JLabel("Select programme's look and feel:");
         label3.setFocusable(false);
+
         numberofDownsSpinner = new JSpinner(new SpinnerNumberModel());
         //numberofDownsSpinner.setFocusable(false);
+
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         numberofDownsSpinner.setValue((Integer) numberOfSimDowns);
         numberofDownsSpinner.addKeyListener(new MyKeyboardListener());
         lookAndFeelInfoBox = new JComboBox<String>();
-        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-            lookAndFeelInfoBox.addItem(info.getClassName());
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+                lookAndFeelInfoBox.addItem(info.getClassName());
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
         fileChooser = new JFileChooser();
 
         saveAdress = "./" + System.getProperty("user.dir");
@@ -66,12 +81,14 @@ public class SettingForm {
         //chooseAdress.addKeyListener(new MyKeyboardListener());
         chooseAdress.addMouseListener(new MyMouseListener());
         fileChooser.setFocusable(false);
+
         mainFrame.add(label1);
         mainFrame.add(numberofDownsSpinner);
         mainFrame.add(label2);
         mainFrame.add(chooseAdress);
         mainFrame.add(label3);
         mainFrame.add(lookAndFeelInfoBox);
+
         cancelButton = new JButton("Cancel");
         cancelButton.addMouseListener(new MyMouseListener());
         cancelButton.setFocusable(false);
@@ -82,12 +99,19 @@ public class SettingForm {
         okButton.requestFocus();
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
+        try {
 
-        lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+            lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
         if(defaults != null) {
             lookAndFeelInfoBox.setSelectedItem(defaults.getLookAndFeelInfo());
             try {
                 UIManager.setLookAndFeel(defaults.getLookAndFeelInfo());
+                SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
+                SwingUtilities.updateComponentTreeUI(mainFrame);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -96,9 +120,10 @@ public class SettingForm {
                 e.printStackTrace();
             } catch (UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
+            }catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
-
         //mainFrame.requestFocus();
     }
 
@@ -123,6 +148,8 @@ public class SettingForm {
                 numberOfSimDowns = (Integer) numberofDownsSpinner.getValue();
                 try {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
+                    SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
+                    SwingUtilities.updateComponentTreeUI(mainFrame);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (InstantiationException e) {
@@ -131,12 +158,11 @@ public class SettingForm {
                     e.printStackTrace();
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
+                }catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
                 if (fileChooser != null && fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
-
-
-                JOptionPane.showMessageDialog(null, "Please restart the programme to set the new look and feel completely");
 
                 mainFrame.dispose();
                 MainForm.rpaintForm();
@@ -160,6 +186,8 @@ public class SettingForm {
                 numberOfSimDowns = (Integer) numberofDownsSpinner.getValue();
                 try {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
+                    SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
+                    SwingUtilities.updateComponentTreeUI(mainFrame);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (InstantiationException e) {
@@ -168,11 +196,12 @@ public class SettingForm {
                     e.printStackTrace();
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
+                }catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
                 if (fileChooser.getSelectedFile() != null)
                     saveAdress = fileChooser.getSelectedFile().toString();
 
-                JOptionPane.showMessageDialog(null, "Please restart the programme to set the new look and feel completely");
                 mainFrame.dispose();
                 MainForm.rpaintForm();
                 hidesetting();

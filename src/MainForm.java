@@ -1,9 +1,6 @@
 import javax.swing.*;
-import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.ArrayList;
 
 /**
  * This class creates main form of the programme
@@ -18,7 +15,7 @@ public class MainForm {
     private JMenu help;
     private JMenu exitMenu;
     private JPanel mainPanel;
-    private JToolBar leftPanel;
+    private JToolBar upToolbar;
     private JButton newDownloadButton;
     private JButton pauseButton;
     private JButton resumeButton;
@@ -49,12 +46,15 @@ public class MainForm {
         mouseListener = new MyMouseListener();
         downloadManager = new MyJFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        downloadManager.setSize(990, 900);
+        downloadManager.setSize(1110, 900);
         downloadManager.setLocationRelativeTo(null);
+        downloadManager.setLayout(new BorderLayout());
         settingForm = new SettingForm();
+        SwingUtilities.updateComponentTreeUI(downloadManager);
         mainPanel = new JPanel(new BorderLayout());
-        leftPanel = new JToolBar();
-        downloadManager.setContentPane(mainPanel);
+        upToolbar = new JToolBar();
+        //downloadManager.setContentPane(mainPanel);
+
         newDownloadButton = new JButton("", new ImageIcon("Images/add.png"));
         newDownloadButton.setFocusable(false);
         pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
@@ -77,57 +77,78 @@ public class MainForm {
         settingButton = new JButton("", new ImageIcon("Images/setting.png"));
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
-        leftPanel.add(new JLabel(new ImageIcon("Images/ICON.png")));
-        leftPanel.add(newDownloadButton);
-        leftPanel.add(pauseButton);
-        leftPanel.add(resumeButton);
-        leftPanel.add(cancelButton);
-        leftPanel.add(removeButton);
-        leftPanel.add(settingButton);
-        downloadManager.add(leftPanel, BorderLayout.NORTH);
+
+        upToolbar.add(new JLabel(new ImageIcon("Images/ICON.png")));
+        upToolbar.add(Box.createHorizontalStrut(40));
+        upToolbar.add(newDownloadButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.addSeparator();
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(pauseButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(resumeButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(cancelButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(removeButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.addSeparator();
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(settingButton);
+        mainPanel.add(upToolbar, BorderLayout.NORTH);
+
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
+
         downloadMenu = new JMenu("                  Download                         ");
         downloadMenu.addActionListener(new MyActionListener());
         downloadMenu.setMnemonic(KeyEvent.VK_D);
         downloadMenu.addKeyListener(new MyKeyListener());
         downloadMenu.setFocusable(false);
+
         newDownload = new JMenuItem("New Download");
         newDownload.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
         newDownload.setMnemonic(KeyEvent.VK_N);
         newDownload.addActionListener(new MyActionListener());
         newDownload.setFocusable(false);
+
         pause = new JMenuItem("Pause");
         pause.setMnemonic(KeyEvent.VK_P);
         pause.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
         pause.addActionListener(new MyActionListener());
         pause.setFocusable(false);
+
         resume = new JMenuItem("Resume");
         resume.setMnemonic(KeyEvent.VK_R);
         resume.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
         resume.addActionListener(new MyActionListener());
         resume.setFocusable(false);
+
         cancel = new JMenuItem("Cancel");
         cancel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
         cancel.addActionListener(new MyActionListener());
         cancel.setFocusable(false);
         cancel.setMnemonic(KeyEvent.VK_C);
+
         remove = new JMenuItem("Remove");
         remove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
         remove.addActionListener(new MyActionListener());
         remove.setFocusable(false);
         remove.setMnemonic(KeyEvent.VK_D);
+
         setting = new JMenuItem("Setting");
         setting.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
         setting.addActionListener(new MyActionListener());
         setting.setFocusable(false);
         setting.setMnemonic(KeyEvent.VK_S);
+
         downloadMenu.add(newDownload);
         downloadMenu.add(pause);
         downloadMenu.add(resume);
         downloadMenu.add(cancel);
         downloadMenu.add(remove);
         downloadMenu.add(setting);
+
         help = new JMenu("                                        Help                                        ");
         help.setFocusable(false);
         aboutMe = new JMenuItem("                              About me:)                              ");
@@ -135,14 +156,17 @@ public class MainForm {
         aboutMe.setMnemonic(KeyEvent.VK_H);
         aboutMe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.ALT_MASK));
         aboutMe.addActionListener(new MyActionListener());
+
         help.add(aboutMe);
         help.setFocusable(false);
+
         exitMenu = new JMenu("                                   Exit                                    ");
         exitMenu.setFocusable(false);
+
         exit = new JMenuItem("                                   Exit:(                             ");
         exit.setFocusable(false);
         exit.setMnemonic(KeyEvent.VK_X);
-        ;
+
         exitMenu.add(exit);
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
         exit.addActionListener(new MyActionListener());
@@ -163,30 +187,32 @@ public class MainForm {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(50, 30, 300, 50);
 
-        /*
-        Test
-         */
-        //Download download = new Download("Test","TheAdress",1000,"");
-        //queue.addDownload(download);
-
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        //downloadManager.pack();
+        downloadManager.add(mainPanel, BorderLayout.CENTER);
 
+        JPanel leftBlackPanel = new JPanel(new BorderLayout());
+        leftBlackPanel.setBackground(Color.decode("#32363F"));
+        leftBlackPanel.add(new JLabel(new ImageIcon("Images/logo.png")),BorderLayout.NORTH);
+        downloadManager.add(leftBlackPanel,BorderLayout.WEST);
 
-        newDownload.addMouseListener(mouseListener);
-        setting.addMouseListener(mouseListener);
-        remove.addMouseListener(mouseListener);
-        resume.addMouseListener(mouseListener);
-        pause.addMouseListener(mouseListener);
-        cancel.addMouseListener(mouseListener);
-        aboutMe.addMouseListener(mouseListener);
-        exit.addMouseListener(mouseListener);
-
+        JLabel credit1 = new JLabel("         Created by \n ");
+        credit1.setFont(new Font("Arial",Font.BOLD,20));
+        credit1.setForeground(Color.WHITE);
+        JLabel credit2 = new JLabel("       Mohamad CM");
+        credit2.setFont(new Font("Arial",Font.BOLD,20));
+        credit2.setForeground(Color.WHITE);
+        JPanel creditPanel = new JPanel(new GridLayout(2,1,1,1));
+        creditPanel.setBackground(Color.decode("#32363F"));
+        creditPanel.add(credit1);
+        creditPanel.add(credit2);
+        leftBlackPanel.add(creditPanel, BorderLayout.SOUTH);
+        /*
         System.out.println(readDownload().size());
         for(Download d : readDownload())
         {
             queue.addDownload(d);
         }
+*/
 
         updateDownloadList();
     }
@@ -280,14 +306,14 @@ public class MainForm {
                     d.showDownloadInfoForm();
                 if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON1) {
                     for (Download tmpDownload : queue.getDownloads()) {
-                        if (tmpDownload.getDownloadPanel().getBackground().equals(Color.CYAN)) {
+                        if (tmpDownload.getDownloadPanel().getBackground().equals(Color.decode("#ffaa00"))) {
                             tmpDownload.getDownloadPanel().setBackground(Color.WHITE);
                             tmpDownload.setIsSelected(false);
                             tmpDownload.getDownloadPanel().revalidate();
                             tmpDownload.getDownloadPanel().repaint();
                         }
                     }
-                    d.getDownloadPanel().setBackground(Color.CYAN);
+                    d.getDownloadPanel().setBackground(Color.decode("#ffaa00"));
                     d.setIsSelected(true);
                     d.getDownloadPanel().revalidate();
                     d.getDownloadPanel().repaint();
@@ -348,6 +374,7 @@ public class MainForm {
     /**
      * Writes each Download in a file (list.jdm)
      */
+/*
     public static void writeDownload(Download download) {
         File file;
 
@@ -369,6 +396,7 @@ public class MainForm {
             }
 
     }
+
     public static ArrayList<Download> readDownload()
     {
         ArrayList<Download> output = new ArrayList<Download>();
@@ -389,6 +417,9 @@ public class MainForm {
         }
         return output;
     }
+*/
 
-
+    public static JFrame getDownloadManager(){
+        return downloadManager;
+    }
 }
