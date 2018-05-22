@@ -61,7 +61,6 @@ public  class FileUtils {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         for(DownloadInfo downloadInfo : downloadInfos)
         {
             output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink()));

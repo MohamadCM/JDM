@@ -326,6 +326,8 @@ public class MainForm {
         for (i = 0; i < queue.getDownloads().size(); i++)
             if (queue.getDownloads().get(i).getIsSelected())
                 break;
+        if(i == queue.getDownloads().size())
+            return;
         queue.removeDownload(i);
         updateDownloadList();
     }

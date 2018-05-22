@@ -24,7 +24,7 @@ public class Download{
     private DownloadInfoForm downloadInfoForm;
     private boolean isSelected;
     private int indexInDownloads;
-    private static DownloadInfo downloadInfo;
+    private DownloadInfo downloadInfo;
 
     public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link)
     {
@@ -105,12 +105,16 @@ public class Download{
     /**
      * @return DownloadInfo as DownloadInfo Object
      */
-    public static DownloadInfo getDownloadInfo()
+    public DownloadInfo getDownloadInfo()
     {
         return downloadInfo;
     }
 
     public void setDownloadedVolume(long downloadedVolume) {
         this.downloadedVolume = downloadedVolume;
+    }
+
+    public String getName() {
+        return name;
     }
 }
