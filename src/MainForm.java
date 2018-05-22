@@ -206,13 +206,9 @@ public class MainForm {
         creditPanel.add(credit1);
         creditPanel.add(credit2);
         leftBlackPanel.add(creditPanel, BorderLayout.SOUTH);
-        /*
-        System.out.println(readDownload().size());
-        for(Download d : readDownload())
-        {
-            queue.addDownload(d);
-        }
-*/
+
+        if(FileUtils.readDownload() != null)
+            queue.setDownloads(FileUtils.readDownload());
 
         updateDownloadList();
     }
@@ -274,6 +270,7 @@ public class MainForm {
             d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(Queue.getIndex(d));
         }
+        FileUtils.writeDownload(queue);
         downloadPanel.revalidate();
         downloadPanel.repaint();
     }
@@ -365,61 +362,23 @@ public class MainForm {
         }
     }
 
-    public static void rpaintForm() {
+    public static void repaintForm() {
         downloadManager.revalidate();
         downloadManager.repaint();
 
     }
 
     /**
-     * Writes each Download in a file (list.jdm)
+     * @return main frame as a JFrame
      */
-/*
-    public static void writeDownload(Download download) {
-        File file;
-
-        file = new File("./files/list.jdm");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                    objectOutputStream.writeObject(download);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-    }
-
-    public static ArrayList<Download> readDownload()
-    {
-        ArrayList<Download> output = new ArrayList<Download>();
-        Download download = null;
-        File file = new File("./files/list.jdm");
-        if(!file.exists())
-            return null;
-        try (FileInputStream fileInputStream = new FileInputStream(file);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
-             download = (Download) objectInputStream.readObject();
-             output.add(download);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return output;
-    }
-*/
-
     public static JFrame getDownloadManager(){
         return downloadManager;
+    }
+
+    /**
+     * @return main queue as Queue object
+     */
+    public static Queue getQueue(){
+        return queue;
     }
 }

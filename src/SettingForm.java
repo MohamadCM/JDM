@@ -1,5 +1,3 @@
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -31,8 +29,8 @@ public class SettingForm {
         mainFrame.setSize(500, 300);
 
 
-        if(readDefaults() != null)
-            defaults = readDefaults();
+        if(FileUtils.readDefaults() != null)
+            defaults = FileUtils.readDefaults();
 
 
         numberOfSimDowns = 1;
@@ -165,11 +163,11 @@ public class SettingForm {
                     saveAdress = fileChooser.getSelectedFile().toString();
 
                 mainFrame.dispose();
-                MainForm.rpaintForm();
+                MainForm.repaintForm();
 
                 defaults = new Defaults(saveAdress,(Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
 
-                writeDefaults(defaults);
+                FileUtils.writeDefaults(defaults);
             }
 
             if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
@@ -203,11 +201,11 @@ public class SettingForm {
                     saveAdress = fileChooser.getSelectedFile().toString();
 
                 mainFrame.dispose();
-                MainForm.rpaintForm();
+                MainForm.repaintForm();
                 hidesetting();
 
                 defaults = new Defaults(saveAdress, (Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
-                writeDefaults(defaults);
+                FileUtils.writeDefaults(defaults);
             }
 
         }
@@ -221,45 +219,6 @@ public class SettingForm {
     }
 
 
-    private static void writeDefaults(Defaults defaults) {
-        File file;
-        file = new File("./files/setting.jdm");
-        if(file.exists())
-            file.delete();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file);
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                objectOutputStream.writeObject(defaults);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-    }
-
-
-    private static Defaults readDefaults()
-    {
-        Defaults output = null;
-        File file = new File("./files/setting.jdm");
-        if(!file.exists())
-            return output;
-        try (FileInputStream fileInputStream = new FileInputStream(file);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
-            output = (Defaults) objectInputStream.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return output;
-    }
 
 }

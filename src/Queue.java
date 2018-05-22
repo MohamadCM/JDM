@@ -72,4 +72,9 @@ public class Queue implements Serializable {
         }
     }
 
+    public static void setDownloads(ArrayList<Download> downs)
+    {
+         downloads = downs;
+    }
+
 }
