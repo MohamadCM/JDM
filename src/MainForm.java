@@ -25,7 +25,6 @@ public class MainForm {
     private JButton cancelButton;
     private JButton removeButton;
     private JButton settingButton;
-    private JButton accessRemoved;
 
     private JMenuItem newDownload;
     private JMenuItem pause;
@@ -35,6 +34,7 @@ public class MainForm {
     private JMenuItem setting;
     private JMenuItem aboutMe;
     private JMenuItem exit;
+    private JMenuItem accessRemoved;
 
     private static JPanel downloadPanel;
     private SettingForm settingForm;
@@ -91,11 +91,6 @@ public class MainForm {
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
 
-        accessRemoved = new JButton("", new ImageIcon("Images/removed.png"));
-        accessRemoved.setToolTipText("Access removed downloads name and link");
-        accessRemoved.setFocusable(false);
-        accessRemoved.addMouseListener(mouseListener);
-
         upToolbar.add(new JLabel(new ImageIcon("Images/ICON.png")));
         upToolbar.add(Box.createHorizontalStrut(40));
         upToolbar.add(newDownloadButton);
@@ -115,7 +110,6 @@ public class MainForm {
         upToolbar.add(settingButton);
         upToolbar.addSeparator();
         upToolbar.add(Box.createHorizontalStrut(15));
-        upToolbar.add(accessRemoved);
         mainPanel.add(upToolbar, BorderLayout.NORTH);
 
         menuBar = new JMenuBar();
@@ -172,14 +166,25 @@ public class MainForm {
 
         help = new JMenu("                                        Help                                        ");
         help.setFocusable(false);
-        aboutMe = new JMenuItem("                              About me:)                              ");
+        aboutMe = new JMenuItem("About me:)                              ");
         aboutMe.setFocusable(false);
         aboutMe.setMnemonic(KeyEvent.VK_H);
         aboutMe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.ALT_MASK));
         aboutMe.addActionListener(new MyActionListener());
 
+        accessRemoved = new JMenuItem("Recover removed downloads");
+        accessRemoved.setFocusable(false);
+        accessRemoved.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
+        accessRemoved.setMnemonic(KeyEvent.VK_R);
+        accessRemoved.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                FileUtils.openRemovedList();
+            }
+        });
+
         help.add(aboutMe);
-        help.setFocusable(false);
+        help.add(accessRemoved);
 
         exitMenu = new JMenu("                                   Exit                                    ");
         exitMenu.setFocusable(false);
@@ -380,7 +385,7 @@ public class MainForm {
                 System.out.println("Source: " + actionEvent.getSource());
             if (actionEvent.getActionCommand().equals("Remove"))
                 delete();
-            if (actionEvent.getActionCommand().equals("                              About me:)                              "))
+            if (actionEvent.getActionCommand().equals("About me:)                              "))
                 showAboutMe();
             if (actionEvent.getActionCommand().equals("                                   Exit:(                             "))
                 System.exit(0);

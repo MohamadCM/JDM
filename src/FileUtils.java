@@ -134,7 +134,7 @@ public  class FileUtils {
 
        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true))){
             bufferedWriter.write("Name: " + download.getName() + "\n");
-            bufferedWriter.write("Link: " + download.getName() + "\n\n\n");
+            bufferedWriter.write("Link: " + download.getLink() + "\n\n\n");
        } catch (IOException e) {
            e.printStackTrace();
        }
