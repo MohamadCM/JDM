@@ -10,18 +10,23 @@ import java.awt.event.*;
  */
 public class MainForm {
     private static MyJFrame downloadManager;
+
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
     private JMenu exitMenu;
     private JPanel mainPanel;
+
     private JToolBar upToolbar;
+
     private JButton newDownloadButton;
     private JButton pauseButton;
     private JButton resumeButton;
     private JButton cancelButton;
     private JButton removeButton;
     private JButton settingButton;
+    private JButton accessRemoved;
+
     private JMenuItem newDownload;
     private JMenuItem pause;
     private JMenuItem resume;
@@ -30,6 +35,7 @@ public class MainForm {
     private JMenuItem setting;
     private JMenuItem aboutMe;
     private JMenuItem exit;
+
     private static JPanel downloadPanel;
     private SettingForm settingForm;
     private MouseListener mouseListener;
@@ -57,26 +63,38 @@ public class MainForm {
 
         newDownloadButton = new JButton("", new ImageIcon("Images/add.png"));
         newDownloadButton.setFocusable(false);
+
         pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
+
         newDownloadButton.setToolTipText("Start a new download!");
         newDownloadButton.addMouseListener(mouseListener);
+
         pauseButton.setFocusable(false);
         pauseButton.addMouseListener(mouseListener);
+
         resumeButton = new JButton("", new ImageIcon("Images/resume.png"));
         resumeButton.setToolTipText("Resume a paused download");
         resumeButton.setFocusable(false);
         resumeButton.addMouseListener(mouseListener);
+
         cancelButton = new JButton("", new ImageIcon("Images/cancel.png"));
         cancelButton.setToolTipText("Cancel a selected download");
         cancelButton.setFocusable(false);
         cancelButton.addMouseListener(mouseListener);
+
         removeButton = new JButton("", new ImageIcon("Images/remove.png"));
         removeButton.setToolTipText("Remove selected download");
         removeButton.setFocusable(false);
         removeButton.addMouseListener(mouseListener);
+
         settingButton = new JButton("", new ImageIcon("Images/setting.png"));
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
+
+        accessRemoved = new JButton("", new ImageIcon("Images/removed.png"));
+        accessRemoved.setToolTipText("Access removed downloads name and link");
+        accessRemoved.setFocusable(false);
+        accessRemoved.addMouseListener(mouseListener);
 
         upToolbar.add(new JLabel(new ImageIcon("Images/ICON.png")));
         upToolbar.add(Box.createHorizontalStrut(40));
@@ -95,6 +113,9 @@ public class MainForm {
         upToolbar.addSeparator();
         upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(settingButton);
+        upToolbar.addSeparator();
+        upToolbar.add(Box.createHorizontalStrut(15));
+        upToolbar.add(accessRemoved);
         mainPanel.add(upToolbar, BorderLayout.NORTH);
 
         menuBar = new JMenuBar();
@@ -251,6 +272,8 @@ public class MainForm {
                 showAboutMe();
             if (mouseEvent.getSource().equals(exit))
                 System.exit(0);
+            if(mouseEvent.getSource().equals(accessRemoved))
+                FileUtils.openRemovedList();
         }
     }
 

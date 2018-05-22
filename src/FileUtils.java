@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -116,5 +117,42 @@ public  class FileUtils {
         }
     }
 
+    /**
+     * Writes name and link of a removed Download to a file (removed.jdm)
+     * @param download is removed download
+     */
+    public static void writeRemovedDownload(Download download)
+    {
+       File file = new File("./files/removed.jdm");
+       if(!file.exists()) {
+           try {
+               file.createNewFile();
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
 
+       try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true))){
+            bufferedWriter.write("Name: " + download.getName() + "\n");
+            bufferedWriter.write("Link: " + download.getName() + "\n\n\n");
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+    }
+
+    /**
+     * Opens the list of removed Downloads
+     */
+    public static void openRemovedList()
+    {
+        File file = new File("./files/removed.jdm");
+        if(!file.exists())
+            return;
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

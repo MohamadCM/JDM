@@ -109,12 +109,25 @@ public class Download{
     {
         return downloadInfo;
     }
-
+    /**
+     * Set DownloadVolume fo a Download
+     * @param downloadedVolume is current download volume
+     */
     public void setDownloadedVolume(long downloadedVolume) {
         this.downloadedVolume = downloadedVolume;
     }
 
+    /**
+     * @return name of file as a string
+     */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return link of Download as a String
+     */
+    public String getLink(){
+        return link;
     }
 }

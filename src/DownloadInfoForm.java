@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
-public class DownloadInfoForm implements Serializable {
+public class DownloadInfoForm {
     private JFrame frame;
     private JButton okButton;
     private int indexInDownloads;

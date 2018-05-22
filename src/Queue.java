@@ -38,6 +38,7 @@ public class Queue implements Serializable {
      */
     public void removeDownload(int i)
     {
+        FileUtils.writeRemovedDownload(downloads.get(i));
         downloads.remove(i);
     }
 
