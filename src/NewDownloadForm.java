@@ -1,5 +1,3 @@
-import com.sun.xml.internal.messaging.saaj.soap.JpegDataContentHandler;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -156,7 +154,7 @@ public class NewDownloadForm {
                 mainFrame.dispose();
             else if(mouseEvent.getSource().equals(okButton)){
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    Download d = new Download(name.getText(), saveAdress, size, link.getText());
+                    Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText());
                     queue.addDownload(d);
                     d.setIndexInDownloads(queue.getIndex(d));
                     mainFrame.dispose();
@@ -170,7 +168,7 @@ public class NewDownloadForm {
         public void keyTyped(KeyEvent keyEvent) {
             if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, link.getText()));
+                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText()));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
                 }

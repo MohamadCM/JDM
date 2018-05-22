@@ -1,12 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 /**
  * Each download task is an instance of this class
@@ -15,7 +10,7 @@ import java.util.Calendar;
  * @author  Mohamad Chaman-Motlah
  * @version 1
  */
-public class Download implements Serializable {
+public class Download{
     private JPanel downloadPanel;
     private JProgressBar progressBar;
     private String name;
@@ -29,18 +24,23 @@ public class Download implements Serializable {
     private DownloadInfoForm downloadInfoForm;
     private boolean isSelected;
     private int indexInDownloads;
-    public Download(String name, String address, long volume, String link)
+    private static DownloadInfo downloadInfo;
+
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link)
     {
         this.name = name;
         this.address = address;
         this.volume = volume;
+        this.downloadedVolume = downloadedVolume;
+        this.percentDownload = percentDownload;
+        this.downloadRate = downloadRate;
         this.link = link;
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         JLabel label1 = new JLabel("Name: " + name);
-        JLabel label2 = new JLabel("              Download rate:  " + downloadRate);
+        JLabel label2 = new JLabel("              Download rate:  " + this.downloadRate);
         JLabel label3 = new JLabel("Size: " + volume + "MB");
-        JLabel label4 = new JLabel("         \t                  " + percentDownload + "% Downloaded");
-        JLabel label5 = new JLabel("              " + downloadedVolume + "MB Downloaded");
+        JLabel label4 = new JLabel("         \t                  " + this.percentDownload + "% Downloaded");
+        JLabel label5 = new JLabel("              " + this.downloadedVolume + "MB Downloaded");
         progressBar = new JProgressBar();
         downloadPanel.add(label1);
         downloadPanel.add(progressBar);
@@ -51,11 +51,13 @@ public class Download implements Serializable {
         downloadPanel.setPreferredSize(new Dimension(1000,100));
 
         startTime = LocalDateTime.now();
-        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, downloadedVolume, percentDownload, downloadRate, startTime);
+        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, startTime);
         this.address = address;
         downloadPanel.setPreferredSize(new Dimension(970,100));
 
         isSelected = false;
+
+        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link,startTime);
 
     }
 
@@ -98,5 +100,17 @@ public class Download implements Serializable {
     public void setIndexInDownloads(int indexInDownloads) {
         this.indexInDownloads = indexInDownloads;
         downloadInfoForm.setIndexInDownloads(indexInDownloads);
+    }
+
+    /**
+     * @return DownloadInfo as DownloadInfo Object
+     */
+    public static DownloadInfo getDownloadInfo()
+    {
+        return downloadInfo;
+    }
+
+    public void setDownloadedVolume(long downloadedVolume) {
+        this.downloadedVolume = downloadedVolume;
     }
 }

@@ -16,6 +16,9 @@ public  class FileUtils {
     public static void writeDownload(Queue queue) {
         File file;
 
+        ArrayList<DownloadInfo> output = new ArrayList<DownloadInfo>();
+        for(Download d : queue.getDownloads())
+            output.add(d.getDownloadInfo());
         file = new File("./files/list.jdm");
         if (file.exists()) {
             file.delete();
@@ -27,8 +30,7 @@ public  class FileUtils {
         }
         try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            for(Download d : queue.getDownloads())
-                objectOutputStream.writeObject(d);
+            objectOutputStream.writeObject(output);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -43,21 +45,26 @@ public  class FileUtils {
      */
     public static ArrayList<Download> readDownload()
     {
+        ArrayList<DownloadInfo> downloadInfos = new ArrayList<DownloadInfo>();
         ArrayList<Download> output = new ArrayList<Download>();
-        Download download = null;
+
         File file = new File("./files/list.jdm");
         if(!file.exists())
             return null;
         try (FileInputStream fileInputStream = new FileInputStream(file);
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
-            download = (Download) objectInputStream.readObject();
-            output.add(download);
+            downloadInfos = (ArrayList<DownloadInfo>) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+
+        for(DownloadInfo downloadInfo : downloadInfos)
+        {
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink()));
         }
         return output;
     }
