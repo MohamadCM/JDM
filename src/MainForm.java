@@ -43,6 +43,9 @@ public class MainForm {
     private static JScrollPane scrollPane;
     private final int MaxNumberOfDownloads = 20;
 
+    private JTextField searchField;
+    private JButton searchButton;
+
     /**
      * Each mainForm needs a title to get created
      *
@@ -108,8 +111,9 @@ public class MainForm {
         upToolbar.addSeparator();
         upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(settingButton);
+        upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.addSeparator();
-        upToolbar.add(Box.createHorizontalStrut(15));
+        upToolbar.add(Box.createHorizontalStrut(10));
         mainPanel.add(upToolbar, BorderLayout.NORTH);
 
         menuBar = new JMenuBar();
@@ -233,6 +237,17 @@ public class MainForm {
         creditPanel.add(credit2);
         leftBlackPanel.add(creditPanel, BorderLayout.SOUTH);
 
+        searchField = new JTextField("Search");
+        searchField.setColumns(10);
+        searchButton = new JButton("",new ImageIcon("./Images/search.png"));
+        searchButton.setFocusable(false);
+        searchButton.setToolTipText("Find in downloads!");
+        searchButton.addMouseListener(mouseListener);
+
+        upToolbar.add(searchField);
+        upToolbar.add(searchButton);
+
+
         if(FileUtils.readDownload() != null)
             queue.setDownloads(FileUtils.readDownload());
 
@@ -279,6 +294,8 @@ public class MainForm {
                 System.exit(0);
             if(mouseEvent.getSource().equals(accessRemoved))
                 FileUtils.openRemovedList();
+            if(mouseEvent.getSource().equals(searchButton))
+                findAndMark();
         }
     }
 
@@ -410,5 +427,13 @@ public class MainForm {
      */
     public static Queue getQueue(){
         return queue;
+    }
+
+    private void findAndMark(){
+        for(Download d : queue.getDownloads())
+            d.getDownloadPanel().setBackground(Color.WHITE);
+        for(Download d : queue.getDownloads())
+            if(d.getName().contains(searchField.getText()) || d.getLink().contains(searchField.getText()))
+                d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
     }
 }
