@@ -153,6 +153,11 @@ public class NewDownloadForm {
             if(mouseEvent.getSource().equals(cancelButton))
                 mainFrame.dispose();
             else if(mouseEvent.getSource().equals(okButton)){
+                if(isBlocked(link.getText())) {
+                    JOptionPane.showMessageDialog(null, "This URL is blocked from setting,\n" +
+                            "You can't download from it!");
+                    return;
+                }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
                     Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText());
                     queue.addDownload(d);
@@ -167,6 +172,10 @@ public class NewDownloadForm {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
             if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER){
+                if(isBlocked(link.getText())) {
+                    JOptionPane.showMessageDialog(null, "The URL is blocked from setting");
+                    return;
+                }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
                     queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText()));
                     mainFrame.dispose();
@@ -174,5 +183,16 @@ public class NewDownloadForm {
                 }
             }
         }
+    }
+
+    private boolean isBlocked(String url)
+    {
+        for(String string : FileUtils.readBlockedLinks())
+            if(url.startsWith(string) || url.startsWith("http://" + string) || url.startsWith("https://" + string))
+                if(!string.equals("") && !string.equals("\n") && !string.equals(" ") && !string.equals(null) && string.length() != 0)
+                    return true;
+
+        return false;
+
     }
 }

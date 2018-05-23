@@ -163,7 +163,7 @@ public  class FileUtils {
     public static void writeBlockedLinks(String string)
     {
         File file = new File("./files/filter.jdm");
-
+        string = string.toLowerCase();
         if(file.exists())
             file.delete();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))){
@@ -182,8 +182,13 @@ public  class FileUtils {
 
         ArrayList<String> output = new ArrayList<String>();
 
+        if(!file.exists())
+            return null;
+
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))){
-            output.add(bufferedReader.readLine());
+            String str;
+            while ((str = bufferedReader.readLine()) != null)
+                output.add(str);
 
         } catch (IOException e) {
             e.printStackTrace();

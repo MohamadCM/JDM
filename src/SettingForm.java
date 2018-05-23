@@ -1,3 +1,5 @@
+import com.sun.xml.internal.messaging.saaj.soap.JpegDataContentHandler;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -20,6 +22,7 @@ public class SettingForm {
     private String saveAdress;
     private int numberOfSimDowns;
     private Defaults defaults;
+
     private JTextArea blockedLinks;
 
     public SettingForm() {
@@ -27,7 +30,7 @@ public class SettingForm {
         mainFrame = new JFrame("Setting");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setLocation(600, 300);
-        mainFrame.setSize(500, 300);
+        mainFrame.setSize(500, 400);
 
 
         if(FileUtils.readDefaults() != null)
@@ -39,10 +42,14 @@ public class SettingForm {
             numberOfSimDowns = defaults.getNumberOfSimDownloads();
 
 
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        mainFrame.setContentPane(panel);
-        mainFrame.setLayout(new GridLayout(4, 2, 10, 10));
+        JPanel upPanel = new JPanel(new GridLayout(3,2,5,5));
+        upPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JPanel borderPanel = new JPanel();
+        borderPanel.setBorder(new EmptyBorder(5,5,5,5));
+        mainFrame.setContentPane(borderPanel);
+
+        mainFrame.setLayout(new BorderLayout());
 
         JLabel label1 = new JLabel("Number of simultaneous downloads:");
         label1.setFocusable(false);
@@ -81,12 +88,14 @@ public class SettingForm {
         chooseAdress.addMouseListener(new MyMouseListener());
         fileChooser.setFocusable(false);
 
-        mainFrame.add(label1);
-        mainFrame.add(numberofDownsSpinner);
-        mainFrame.add(label2);
-        mainFrame.add(chooseAdress);
-        mainFrame.add(label3);
-        mainFrame.add(lookAndFeelInfoBox);
+        upPanel.add(label1);
+        upPanel.add(numberofDownsSpinner);
+        upPanel.add(label2);
+        upPanel.add(chooseAdress);
+        upPanel.add(label3);
+        upPanel.add(lookAndFeelInfoBox);
+
+        mainFrame.add(upPanel, BorderLayout.NORTH);
 
         cancelButton = new JButton("Cancel");
         cancelButton.addMouseListener(new MyMouseListener());
@@ -99,8 +108,10 @@ public class SettingForm {
 
         okButton.requestFocus();
 
-        mainFrame.add(cancelButton);
-        mainFrame.add(okButton);
+        JPanel okAndCancelPanel = new JPanel(new GridLayout(1,2,5,5));
+        okAndCancelPanel.add(cancelButton);
+        okAndCancelPanel.add(okButton);
+        mainFrame.add(okAndCancelPanel,BorderLayout.SOUTH);
         try {
 
             lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
@@ -128,7 +139,19 @@ public class SettingForm {
         }
 
         blockedLinks = new JTextArea();
+        JScrollPane blockedListScrollPane = new JScrollPane(blockedLinks);
+        blockedListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        blockedListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        JPanel blockListPanel = new JPanel(new BorderLayout());
+        blockListPanel.add(new JLabel("Blocked links:"),BorderLayout.NORTH);
+        blockListPanel.add(blockedListScrollPane, BorderLayout.CENTER);
+
+        mainFrame.add(blockListPanel, BorderLayout.CENTER);
+
+        if(FileUtils.readBlockedLinks() != null)
+            for(String string : FileUtils.readBlockedLinks())
+                blockedLinks.setText(blockedLinks.getText() + string + "\n");
         //mainFrame.requestFocus();
     }
 
@@ -175,6 +198,7 @@ public class SettingForm {
                 defaults = new Defaults(saveAdress,(Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
 
                 FileUtils.writeDefaults(defaults);
+                FileUtils.writeBlockedLinks(blockedLinks.getText());
             }
 
             if (mouseEvent.getSource().equals(chooseAdress) && chooseAdress != null)
@@ -213,13 +237,14 @@ public class SettingForm {
 
                 defaults = new Defaults(saveAdress, (Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
                 FileUtils.writeDefaults(defaults);
+                FileUtils.writeBlockedLinks(blockedLinks.getText());
             }
 
         }
     }
 
     /**
-     * @return location of saiving a file
+     * @return location of saving a file
      */
     public String getSaveAdress() {
         return saveAdress;
