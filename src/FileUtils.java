@@ -155,4 +155,39 @@ public  class FileUtils {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Write blocked links into a text file (filter.jdm)
+     * @param string is a String consists of filtered links
+     */
+    public static void writeBlockedLinks(String string)
+    {
+        File file = new File("./files/filter.jdm");
+
+        if(file.exists())
+            file.delete();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))){
+            bufferedWriter.write(string);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Reads blocked links from filter.jdm
+     * @return an array list of Strings
+     */
+    public static ArrayList<String> readBlockedLinks(){
+        File file = new File("./files/filter.jdm");
+
+        ArrayList<String> output = new ArrayList<String>();
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))){
+            output.add(bufferedReader.readLine());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
 }

@@ -115,7 +115,7 @@ public class MainForm {
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
 
-        downloadMenu = new JMenu("                  Download                         ");
+        downloadMenu = new JMenu("Download     ");
         downloadMenu.addActionListener(new MyActionListener());
         downloadMenu.setMnemonic(KeyEvent.VK_D);
         downloadMenu.addKeyListener(new MyKeyListener());
@@ -164,7 +164,7 @@ public class MainForm {
         downloadMenu.add(remove);
         downloadMenu.add(setting);
 
-        help = new JMenu("                                        Help                                        ");
+        help = new JMenu("Help     ");
         help.setFocusable(false);
         aboutMe = new JMenuItem("About me:)                              ");
         aboutMe.setFocusable(false);
@@ -186,10 +186,10 @@ public class MainForm {
         help.add(aboutMe);
         help.add(accessRemoved);
 
-        exitMenu = new JMenu("                                   Exit                                    ");
+        exitMenu = new JMenu("Exit");
         exitMenu.setFocusable(false);
 
-        exit = new JMenuItem("                                   Exit:(                             ");
+        exit = new JMenuItem("Exit:(");
         exit.setFocusable(false);
         exit.setMnemonic(KeyEvent.VK_X);
 
@@ -387,7 +387,7 @@ public class MainForm {
                 delete();
             if (actionEvent.getActionCommand().equals("About me:)                              "))
                 showAboutMe();
-            if (actionEvent.getActionCommand().equals("                                   Exit:(                             "))
+            if (actionEvent.getActionCommand().equals("Exit:("))
                 System.exit(0);
         }
     }

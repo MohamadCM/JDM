@@ -20,6 +20,7 @@ public class SettingForm {
     private String saveAdress;
     private int numberOfSimDowns;
     private Defaults defaults;
+    private JTextArea blockedLinks;
 
     public SettingForm() {
 
@@ -90,11 +91,14 @@ public class SettingForm {
         cancelButton = new JButton("Cancel");
         cancelButton.addMouseListener(new MyMouseListener());
         cancelButton.setFocusable(false);
+
         okButton = new JButton("OK");
         okButton.addMouseListener(new MyMouseListener());
         okButton.addKeyListener(new MyKeyboardListener());
         //okButton.setFocusable(false);
+
         okButton.requestFocus();
+
         mainFrame.add(cancelButton);
         mainFrame.add(okButton);
         try {
@@ -122,6 +126,9 @@ public class SettingForm {
                 System.out.println(e.getMessage());
             }
         }
+
+        blockedLinks = new JTextArea();
+
         //mainFrame.requestFocus();
     }
 
