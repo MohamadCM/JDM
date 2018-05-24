@@ -292,25 +292,25 @@ public class MainForm {
 
         downloadPanelMouseLister = new DPanelMouseLister();
 
-        Queue.sortBy("time",true);
+        queue.sortBy("time",true);
         updateDownloadList();
 
         sortMenu = new JPopupMenu();
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by name   " + "⇅") {
             public void actionPerformed(ActionEvent e) {
-                Queue.sortBy("name",true);
+                queue.sortBy("name",true);
                 updateDownloadList();
             }
         }));
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by size  " + "⇅") {
             public void actionPerformed(ActionEvent e) {
-                Queue.sortBy("size",true);
+                queue.sortBy("size",true);
                 updateDownloadList();
             }
         }));
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by start time   " + "⇅") {
             public void actionPerformed(ActionEvent e) {
-                Queue.sortBy("time", true);
+                queue.sortBy("time", true);
                 updateDownloadList();
             }
         }));
@@ -390,7 +390,7 @@ public class MainForm {
             d.getDownloadPanel().setBackground(Color.WHITE);
             if(d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
-            d.setIndexInDownloads(Queue.getIndex(d));
+            d.setIndexInDownloads(queue.getIndex(d));
         }
         FileUtils.writeDownload(queue);
         downloadPanel.revalidate();

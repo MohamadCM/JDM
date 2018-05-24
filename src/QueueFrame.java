@@ -80,6 +80,7 @@ public class QueueFrame extends JFrame{
         toolBar.add(Box.createHorizontalStrut(15));
 
         add(toolBar, BorderLayout.NORTH);
+        queue = new Queue("Queue");
     }
 
     /**
