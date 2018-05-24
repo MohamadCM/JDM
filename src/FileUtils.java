@@ -44,7 +44,7 @@ public  class FileUtils {
      * Reads Downloads from  list.jdm
      * @return
      */
-    public static ArrayList<Download> readDownload()
+    public static ArrayList<Download> readDownload(Queue queue)
     {
         ArrayList<DownloadInfo> downloadInfos = new ArrayList<DownloadInfo>();
         ArrayList<Download> output = new ArrayList<Download>();
@@ -64,7 +64,7 @@ public  class FileUtils {
         }
         for(DownloadInfo downloadInfo : downloadInfos)
         {
-            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink()));
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue));
         }
         return output;
     }

@@ -286,8 +286,8 @@ public class MainForm {
         upToolbar.add(searchButton);
 
 
-        if(FileUtils.readDownload() != null)
-            queue.setDownloads(FileUtils.readDownload());
+        if(FileUtils.readDownload(queue) != null)
+            queue.setDownloads(FileUtils.readDownload(queue));
 
 
         downloadPanelMouseLister = new DPanelMouseLister();
@@ -384,7 +384,6 @@ public class MainForm {
      */
     public static void updateDownloadList() {
         downloadPanel.removeAll();
-        FileUtils.writeQueue(queue);
         for (Download d : queue.getDownloads()) {
             downloadPanel.add(d.getDownloadPanel());
             d.getDownloadPanel().setBackground(Color.WHITE);

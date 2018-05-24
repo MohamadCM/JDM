@@ -19,11 +19,12 @@ public class DownloadInfoForm {
     private JButton okButton;
     private int indexInDownloads;
     private JSpinner numberInQueue;
+    private Queue queue;
     /**
      * Requires name of the download
      * @param name
      */
-    public DownloadInfoForm(String name, String address,String link ,long volume, long downloadedVolume, double percentDownload,long downloadRate, LocalDateTime startTime)
+    public DownloadInfoForm(String name, String address,String link ,long volume, long downloadedVolume, double percentDownload,long downloadRate, LocalDateTime startTime, Queue queue)
     {
         frame = new JFrame("Info of: " + name);
         frame.setSize(500,350);
@@ -69,6 +70,7 @@ public class DownloadInfoForm {
         okButton.requestFocus();
         frame.add(okButton);
         frame.pack();
+        this.queue = queue;
     }
 
     /**
@@ -83,7 +85,7 @@ public class DownloadInfoForm {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
             if (mouseEvent.getSource().equals(okButton)) {
-                Queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
+                queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
                 MainForm.updateDownloadList();
                 frame.dispose();
             }
@@ -94,7 +96,7 @@ public class DownloadInfoForm {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
             if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER) {
-                Queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
+                queue.updateQueue(indexInDownloads, (Integer)numberInQueue.getValue());
                 MainForm.updateDownloadList();
                 frame.dispose();
             }

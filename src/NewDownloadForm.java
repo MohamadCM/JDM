@@ -159,7 +159,7 @@ public class NewDownloadForm {
                     return;
                 }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText());
+                    Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), queue);
                     queue.addDownload(d);
                     d.setIndexInDownloads(queue.getIndex(d));
                     mainFrame.dispose();
@@ -177,7 +177,7 @@ public class NewDownloadForm {
                     return;
                 }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText()));
+                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), queue));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
                 }

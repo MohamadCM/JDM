@@ -25,8 +25,8 @@ public class Download{
     private boolean isSelected;
     private int indexInDownloads;
     private DownloadInfo downloadInfo;
-
-    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link)
+    private Queue queue;
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue)
     {
         this.name = name;
         this.address = address;
@@ -51,12 +51,12 @@ public class Download{
         downloadPanel.setPreferredSize(new Dimension(1000,100));
 
         startTime = LocalDateTime.now();
-        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, startTime);
+        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, startTime, queue);
         this.address = address;
         downloadPanel.setPreferredSize(new Dimension(970,100));
 
         isSelected = false;
-
+        this.queue = queue;
         downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link,startTime);
 
     }
