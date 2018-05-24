@@ -52,6 +52,10 @@ public class MainForm {
     private JPopupMenu sortMenu;
 
     private static DPanelMouseLister downloadPanelMouseLister;
+
+    private JButton queueButton;
+
+    private static QueueFrame queueFrame;
     /**
      * Each mainForm needs a title to get created
      *
@@ -73,11 +77,11 @@ public class MainForm {
         newDownloadButton = new JButton("", new ImageIcon("Images/add.png"));
         newDownloadButton.setFocusable(false);
 
-        pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
 
         newDownloadButton.setToolTipText("Start a new download!");
         newDownloadButton.addMouseListener(mouseListener);
 
+        pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
         pauseButton.setFocusable(false);
         pauseButton.addMouseListener(mouseListener);
 
@@ -231,7 +235,21 @@ public class MainForm {
 
         JPanel leftBlackPanel = new JPanel(new BorderLayout());
         leftBlackPanel.setBackground(Color.decode("#32363F"));
-        leftBlackPanel.add(new JLabel(new ImageIcon("Images/logo.png")),BorderLayout.NORTH);
+        //leftBlackPanel.add(new JLabel(new ImageIcon("Images/logo.png")),BorderLayout.NORTH);
+        queueButton = new JButton("⥁⥁⥁Queue");
+        queueButton.setFont(new Font("Arial", Font.BOLD, 20));
+        queueButton.setFocusable(false);
+        queueButton.setHorizontalAlignment(SwingConstants.LEFT);
+        queueButton.setForeground(Color.WHITE);
+        queueButton.setOpaque(false);
+        queueButton.setContentAreaFilled(false);
+        queueButton.setBorderPainted(false);
+        queueButton.addMouseListener(mouseListener);
+        JPanel leftUpPanel = new JPanel(new GridLayout(2,1,10,0));
+        leftUpPanel.setBackground(Color.decode("#32363F"));
+        leftUpPanel.add(new JLabel(new ImageIcon("Images/logo.png")));
+        leftUpPanel.add(queueButton);
+        leftBlackPanel.add(leftUpPanel,BorderLayout.NORTH);
         downloadManager.add(leftBlackPanel,BorderLayout.WEST);
 
         JLabel credit1 = new JLabel("         Created by \n ");
@@ -271,8 +289,6 @@ public class MainForm {
         if(FileUtils.readDownload() != null)
             queue.setDownloads(FileUtils.readDownload());
 
-        if(FileUtils.readQueue() != null)
-            queue = FileUtils.readQueue();
 
         downloadPanelMouseLister = new DPanelMouseLister();
 
@@ -305,6 +321,9 @@ public class MainForm {
                 sortMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         });
+
+        queueFrame = new QueueFrame();
+
         updateDownloadList();
     }
 
@@ -350,6 +369,8 @@ public class MainForm {
                 FileUtils.openRemovedList();
             if(mouseEvent.getSource().equals(searchButton))
                 findAndMark();
+            if(mouseEvent.getSource().equals(queueButton))
+                queueFrame.showGUI();
         }
     }
 
