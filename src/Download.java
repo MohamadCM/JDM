@@ -130,4 +130,18 @@ public class Download{
     public String getLink(){
         return link;
     }
+
+    /**
+     * @return size of downloading file
+     */
+    public long getVolume() {
+        return volume;
+    }
+
+    /**
+     * @return start time of download
+     */
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
 }

@@ -73,9 +73,51 @@ public class Queue implements Serializable {
         }
     }
 
+    /**
+     * sorts downloads by size , name and startTime
+     * @param type is type of sort( "size" "name" "time" are acceptable
+     * @param ascending if {@code true} sorts ascending , descending otherwise
+     */
+    public static void sortBy(String type, boolean ascending)
+    {
+        for(int i = 0 ; i < downloads.size() - 1 ; i++)
+            for (int j = 0 ; j < downloads.size() - i - 1 ; j++)
+            {
+                if(type.equals("name")) {
+                    if(ascending == true)
+                        if(downloads.get(j).getName().compareTo(downloads.get(j + 1).getName()) < 0)
+                            Collections.swap(downloads, j , j + 1);
+                    else
+                        if(downloads.get(j).getName().compareTo(downloads.get(j + 1).getName()) > 0)
+                            Collections.swap(downloads, j , j + 1);
+
+                }
+                else if(type.equals("size")){
+                    if(ascending = true)
+                        if(downloads.get(j).getVolume() < downloads.get(j + 1).getVolume())
+                            Collections.swap(downloads, j , j + 1);
+                else
+                    if(downloads.get(j).getVolume() > downloads.get(j + 1).getVolume())
+                        Collections.swap(downloads, j , j + 1);
+
+                }
+
+                else {
+                    if(ascending = true)
+                        if(downloads.get(j).getStartTime().compareTo(downloads.get(j + 1).getStartTime()) < 0)
+                            Collections.swap(downloads, j , j + 1);
+                        else
+                            if(downloads.get(j).getStartTime().compareTo(downloads.get(j + 1).getStartTime()) > 0)
+                            Collections.swap(downloads, j , j + 1);
+                }
+            }
+    }
+
     public static void setDownloads(ArrayList<Download> downs)
     {
          downloads = downs;
     }
+
+
 
 }

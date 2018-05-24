@@ -195,4 +195,41 @@ public  class FileUtils {
         }
         return output;
     }
+
+    /**
+     * Write queue in a file
+     * @param queue is a given Queue to write
+     */
+    public static void writeQueue(Queue queue){
+        File file = new File("./files/queue.jdm");
+
+        if(file.exists())
+            file.delete();
+
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))){
+            objectOutputStream.writeObject(queue);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Queue readQueue( ) {
+        File file;
+        file = new File("./files/queue.jdm");
+        Queue queue = null;
+        if(!file.exists())
+            return queue;
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))){
+            queue = (Queue) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return queue;
+    }
 }

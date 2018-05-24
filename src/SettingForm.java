@@ -126,13 +126,13 @@ public class SettingForm {
                 SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
                 SwingUtilities.updateComponentTreeUI(mainFrame);
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             } catch (UnsupportedLookAndFeelException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }

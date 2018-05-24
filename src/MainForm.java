@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 /**
  * This class creates main form of the programme
@@ -46,6 +47,11 @@ public class MainForm {
     private JTextField searchField;
     private JButton searchButton;
 
+    private JButton sortButton;
+
+    private JPopupMenu sortMenu;
+
+    private static DPanelMouseLister downloadPanelMouseLister;
     /**
      * Each mainForm needs a title to get created
      *
@@ -55,7 +61,7 @@ public class MainForm {
         mouseListener = new MyMouseListener();
         downloadManager = new MyJFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        downloadManager.setSize(1110, 900);
+        downloadManager.setSize(1120, 900);
         downloadManager.setLocationRelativeTo(null);
         downloadManager.setLayout(new BorderLayout());
         settingForm = new SettingForm();
@@ -94,24 +100,27 @@ public class MainForm {
         settingButton.setToolTipText("App preference");
         settingButton.setFocusable(false);
 
+        sortButton = new JButton("", new ImageIcon("Images/sort.png"));
+        sortButton.setToolTipText("Sort by options");
+        sortButton.setFocusable(false);
+
         upToolbar.add(new JLabel(new ImageIcon("Images/ICON.png")));
         upToolbar.add(Box.createHorizontalStrut(40));
         upToolbar.add(newDownloadButton);
         upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.addSeparator();
-        upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(pauseButton);
-        upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(resumeButton);
-        upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(cancelButton);
-        upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(removeButton);
         upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.addSeparator();
         upToolbar.add(Box.createHorizontalStrut(10));
         upToolbar.add(settingButton);
         upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.addSeparator();
+        upToolbar.add(Box.createHorizontalStrut(10));
+        upToolbar.add(sortButton);
         upToolbar.addSeparator();
         upToolbar.add(Box.createHorizontalStrut(10));
         mainPanel.add(upToolbar, BorderLayout.NORTH);
@@ -243,6 +252,17 @@ public class MainForm {
         searchButton.setFocusable(false);
         searchButton.setToolTipText("Find in downloads!");
         searchButton.addMouseListener(mouseListener);
+        searchField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) { }
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER)
+                    findAndMark();
+            }
+            @Override
+            public void keyReleased(KeyEvent keyEvent) { }
+        });
 
         upToolbar.add(searchField);
         upToolbar.add(searchButton);
@@ -251,6 +271,40 @@ public class MainForm {
         if(FileUtils.readDownload() != null)
             queue.setDownloads(FileUtils.readDownload());
 
+        if(FileUtils.readQueue() != null)
+            queue = FileUtils.readQueue();
+
+        downloadPanelMouseLister = new DPanelMouseLister();
+
+        Queue.sortBy("time",true);
+        updateDownloadList();
+
+        sortMenu = new JPopupMenu();
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by name   " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                Queue.sortBy("name",true);
+                updateDownloadList();
+            }
+        }));
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by size  " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                Queue.sortBy("size",true);
+                updateDownloadList();
+            }
+        }));
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by start time   " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                Queue.sortBy("time", true);
+                updateDownloadList();
+            }
+        }));
+
+
+        sortButton.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                sortMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
         updateDownloadList();
     }
 
@@ -309,10 +363,12 @@ public class MainForm {
      */
     public static void updateDownloadList() {
         downloadPanel.removeAll();
+        FileUtils.writeQueue(queue);
         for (Download d : queue.getDownloads()) {
             downloadPanel.add(d.getDownloadPanel());
             d.getDownloadPanel().setBackground(Color.WHITE);
-            d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
+            if(d.getDownloadPanel().getMouseListeners().length == 0)
+                d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(Queue.getIndex(d));
         }
         FileUtils.writeDownload(queue);
@@ -336,7 +392,9 @@ public class MainForm {
     /*
     Listener for downloads
      */
-    private static class DPanelMouseLister extends MouseAdapter {
+    private static class DPanelMouseLister implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) { }
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
             for (Download d : queue.getDownloads()) {
@@ -362,6 +420,15 @@ public class MainForm {
                 }
             }
         }
+
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) { }
+
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) { }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) { }
     }
 
     private void delete() {
