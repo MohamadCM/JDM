@@ -164,6 +164,7 @@ public class NewDownloadForm {
                     d.setIndexInDownloads(queue.getIndex(d));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
+                    QueueFrame.updateDownloadList();
                 }
             }
         }
@@ -180,6 +181,7 @@ public class NewDownloadForm {
                     queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), queue));
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
+                    QueueFrame.updateDownloadList();
                 }
             }
         }

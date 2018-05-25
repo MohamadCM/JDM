@@ -200,29 +200,47 @@ public  class FileUtils {
      * Write queue in a file
      * @param queue is a given Queue to write
      */
-    public static void writeQueue(Queue queue){
-        File file = new File("./files/queue.jdm");
+    public static void writeQueue(Queue queue) {
+        File file;
 
-        if(file.exists())
+        ArrayList<DownloadInfo> output = new ArrayList<DownloadInfo>();
+        for(Download d : queue.getDownloads())
+            output.add(d.getDownloadInfo());
+        file = new File("./files/queue.jdm");
+        if (file.exists()) {
             file.delete();
-
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))){
-            objectOutputStream.writeObject(queue);
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(output);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public static Queue readQueue( ) {
-        File file;
-        file = new File("./files/queue.jdm");
-        Queue queue = null;
+    /**
+     * Reads Downloads from  queue.jdm
+     * @return an array list of downloads
+     */
+    public static ArrayList<Download> readQueue(Queue queue)
+    {
+        ArrayList<DownloadInfo> downloadInfos = new ArrayList<DownloadInfo>();
+        ArrayList<Download> output = new ArrayList<Download>();
+
+        File file = new File("./files/queue.jdm");
         if(!file.exists())
-            return queue;
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))){
-            queue = (Queue) objectInputStream.readObject();
+            return null;
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)){
+            downloadInfos = (ArrayList<DownloadInfo>) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -230,6 +248,11 @@ public  class FileUtils {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return queue;
+        for(DownloadInfo downloadInfo : downloadInfos)
+        {
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue));
+        }
+        return output;
     }
+
 }

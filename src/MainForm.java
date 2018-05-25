@@ -56,6 +56,8 @@ public class MainForm {
     private JButton queueButton;
 
     private static QueueFrame queueFrame;
+
+    private Queue mainQueue;
     /**
      * Each mainForm needs a title to get created
      *
@@ -135,7 +137,6 @@ public class MainForm {
         downloadMenu = new JMenu("Download     ");
         downloadMenu.addActionListener(new MyActionListener());
         downloadMenu.setMnemonic(KeyEvent.VK_D);
-        downloadMenu.addKeyListener(new MyKeyListener());
         downloadMenu.setFocusable(false);
 
         newDownload = new JMenuItem("New Download");
@@ -245,10 +246,10 @@ public class MainForm {
         queueButton.setContentAreaFilled(false);
         queueButton.setBorderPainted(false);
         queueButton.addMouseListener(mouseListener);
-        JPanel leftUpPanel = new JPanel(new GridLayout(2,1,10,0));
+        JPanel leftUpPanel = new JPanel(new BorderLayout());
         leftUpPanel.setBackground(Color.decode("#32363F"));
-        leftUpPanel.add(new JLabel(new ImageIcon("Images/logo.png")));
-        leftUpPanel.add(queueButton);
+        leftUpPanel.add(new JLabel(new ImageIcon("Images/logo.png")),BorderLayout.NORTH);
+        leftUpPanel.add(queueButton, BorderLayout.CENTER);
         leftBlackPanel.add(leftUpPanel,BorderLayout.NORTH);
         downloadManager.add(leftBlackPanel,BorderLayout.WEST);
 
@@ -322,7 +323,11 @@ public class MainForm {
             }
         });
 
-        queueFrame = new QueueFrame();
+
+        mainQueue = new Queue("Main queue");
+
+        queueFrame = new QueueFrame(mainQueue, settingForm);
+
 
         updateDownloadList();
     }
@@ -465,13 +470,6 @@ public class MainForm {
     }
 
 
-    private class MyKeyListener extends KeyAdapter {
-
-        @Override
-        public void keyTyped(KeyEvent keyEvent) {
-
-        }
-    }
 
     private class MyActionListener implements ActionListener {
 
