@@ -36,6 +36,7 @@ public class MainForm {
     private JMenuItem aboutMe;
     private JMenuItem exit;
     private JMenuItem accessRemoved;
+    private JMenuItem exportToZip;
 
     private static JPanel downloadPanel;
     private SettingForm settingForm;
@@ -175,12 +176,19 @@ public class MainForm {
         setting.setFocusable(false);
         setting.setMnemonic(KeyEvent.VK_S);
 
+        exportToZip = new JMenuItem("Export to zip");
+        exportToZip.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
+        exportToZip.addActionListener(new MyActionListener());
+        exportToZip.setFocusable(false);
+        exportToZip.setMnemonic(KeyEvent.VK_E);
+
         downloadMenu.add(newDownload);
         downloadMenu.add(pause);
         downloadMenu.add(resume);
         downloadMenu.add(cancel);
         downloadMenu.add(remove);
         downloadMenu.add(setting);
+        downloadMenu.add(exportToZip);
 
         help = new JMenu("Help     ");
         help.setFocusable(false);
@@ -491,6 +499,8 @@ public class MainForm {
                 showAboutMe();
             if (actionEvent.getActionCommand().equals("Exit:("))
                 System.exit(0);
+            if (actionEvent.getActionCommand().equals("Export to zip"))
+                FileUtils.exportToZip();
         }
     }
 

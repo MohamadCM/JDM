@@ -1,6 +1,9 @@
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * This class contains Utilities to read and write
@@ -254,4 +257,40 @@ public  class FileUtils {
         return output;
     }
 
+    /**
+     * Create a zip file containing main files of the app (list.jdm, queue.jdm, removed.jdm, filter.jdm, setting.jdm)
+     */
+    public static void exportToZip()
+    {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(System.getProperty("user.home") + "/Desktop/" + "JDM_OUTPUT.zip");
+             ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream)){
+            addToZipFile("./files/list.jdm", zipOutputStream);
+            addToZipFile("./files/queue.jdm", zipOutputStream);
+            addToZipFile("./files/setting.jdm", zipOutputStream);
+            addToZipFile("./files/removed.jdm", zipOutputStream);
+            addToZipFile("./files/filter.jdm", zipOutputStream);
+            JOptionPane.showMessageDialog(MainForm.getDownloadManager(), "Successfully exported to JDM_OUTPUT.zip on desktop");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addToZipFile(String fileName, ZipOutputStream zos) throws FileNotFoundException, IOException {
+
+        File file = new File(fileName);
+        FileInputStream fis = new FileInputStream(file);
+        ZipEntry zipEntry = new ZipEntry(fileName);
+        zos.putNextEntry(zipEntry);
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fis.read(buffer)) >= 0) {
+            zos.write(buffer, 0, length);
+        }
+
+        zos.closeEntry();
+        fis.close();
+    }
 }
