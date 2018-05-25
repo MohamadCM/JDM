@@ -24,8 +24,11 @@ public class DownloadInfoForm {
      * Requires name of the download
      * @param name
      */
-    public DownloadInfoForm(String name, String address,String link ,long volume, long downloadedVolume, double percentDownload,long downloadRate, LocalDateTime startTime, Queue queue)
+    public DownloadInfoForm(String name, String address,String link ,long volume, long downloadedVolume, double percentDownload,long downloadRate, LocalDateTime addTime, Queue queue, LocalDateTime startTime)
     {
+
+        this.queue = queue;
+
         frame = new JFrame("Info of: " + name);
         frame.setSize(500,350);
         frame.setLocation(400,400);
@@ -33,10 +36,11 @@ public class DownloadInfoForm {
         JPanel borderPanel = new JPanel();
         borderPanel.setBorder(new EmptyBorder(5,5,5,5));
         frame.setContentPane(borderPanel);
-        frame.setLayout(new GridLayout(8,1,5,5));
+        frame.setLayout(new GridLayout(9,1,5,5));
+
         JPanel upPanel = new JPanel(new GridLayout(1,2,10,10));
         JLabel nameLable = new JLabel("Name: " + name);
-        JLabel timeLabe = new JLabel("Start Time: " + startTime.toString());
+        JLabel timeLabe = new JLabel("Added at: " + addTime.toString());
         upPanel.add(nameLable);
         upPanel.add(timeLabe);
         frame.add(upPanel);
@@ -59,18 +63,27 @@ public class DownloadInfoForm {
         numberInQueuePanel.setFocusable(false);
         numberInQueuePanel.add(numberInQueueLabel);
         numberInQueuePanel.add(numberInQueue);
+
         frame.add(midPanel);
         frame.add(new JLabel("Download link: " + link));
         frame.add(new JLabel("Download to: " + address));
         frame.add(new JLabel("Download speed: " + downloadRate));
         frame.add(numberInQueuePanel);
+
         okButton = new JButton("OK");
         okButton.addKeyListener(new MyKeyboardListener());
         okButton.addMouseListener(new MyMouseListener());
         okButton.requestFocus();
+
+        JPanel startTimePanel = new JPanel(new GridLayout(1,2,10,10));
+        startTimePanel.add(new JLabel("Start Download at:"));
+        if(startTime.isBefore(LocalDateTime.now()))
+            startTime = LocalDateTime.now();
+        startTimePanel.add(new JLabel(startTime.toString()));
+        frame.add(startTimePanel);
+
         frame.add(okButton);
         frame.pack();
-        this.queue = queue;
     }
 
     /**

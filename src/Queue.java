@@ -104,10 +104,10 @@ public class Queue implements Serializable {
 
                 else {
                     if(ascending = true)
-                        if(downloads.get(j).getStartTime().compareTo(downloads.get(j + 1).getStartTime()) < 0)
+                        if(downloads.get(j).getAddTime().compareTo(downloads.get(j + 1).getAddTime()) < 0)
                             Collections.swap(downloads, j , j + 1);
                         else
-                            if(downloads.get(j).getStartTime().compareTo(downloads.get(j + 1).getStartTime()) > 0)
+                            if(downloads.get(j).getAddTime().compareTo(downloads.get(j + 1).getAddTime()) > 0)
                             Collections.swap(downloads, j , j + 1);
                 }
             }

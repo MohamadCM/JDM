@@ -16,9 +16,10 @@ public class DownloadInfo implements Serializable {
     private double percentDownload;
     private long downloadRate;
     private String link;
+    private LocalDateTime addTime;
     private LocalDateTime startTime;
 
-    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime startTime) {
+    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -26,6 +27,7 @@ public class DownloadInfo implements Serializable {
         this.percentDownload = percentDownload;
         this.downloadRate = downloadRate;
         this.link = link;
+        this.addTime = addTime;
         this.startTime = startTime;
     }
 
@@ -85,11 +87,29 @@ public class DownloadInfo implements Serializable {
         this.link = link;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDateTime getAddTime() {
+        return addTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setAddTime(LocalDateTime addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * @return starting time of Download
+     */
+    public LocalDateTime getStartTime()
+    {
+       return startTime;
+    }
+
+
+    /**
+     * Sets start time for download
+     * @param startTime is given startTime
+     */
+    public void setStartTime(LocalDateTime startTime){
         this.startTime = startTime;
     }
+
 }

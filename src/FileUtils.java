@@ -67,7 +67,7 @@ public  class FileUtils {
         }
         for(DownloadInfo downloadInfo : downloadInfos)
         {
-            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue));
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime()));
         }
         return output;
     }
@@ -252,7 +252,7 @@ public  class FileUtils {
         }
         for(DownloadInfo downloadInfo : downloadInfos)
         {
-            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue));
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime()));
         }
         return output;
     }
@@ -284,7 +284,7 @@ public  class FileUtils {
         ZipEntry zipEntry = new ZipEntry(fileName);
         zos.putNextEntry(zipEntry);
 
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[24];
         int length;
         while ((length = fis.read(buffer)) >= 0) {
             zos.write(buffer, 0, length);

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -20,13 +19,15 @@ public class Download{
     private double percentDownload;
     private long downloadRate;
     private String link;
-    private LocalDateTime startTime;
+    private LocalDateTime addTime;
     private DownloadInfoForm downloadInfoForm;
     private boolean isSelected;
     private int indexInDownloads;
     private DownloadInfo downloadInfo;
     private Queue queue;
-    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue)
+    private LocalDateTime startTime;
+
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime)
     {
         this.name = name;
         this.address = address;
@@ -35,6 +36,8 @@ public class Download{
         this.percentDownload = percentDownload;
         this.downloadRate = downloadRate;
         this.link = link;
+        this.startTime = startTime;
+
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         JLabel label1 = new JLabel("Name: " + name);
         JLabel label2 = new JLabel("              Download rate:  " + this.downloadRate);
@@ -50,14 +53,14 @@ public class Download{
         downloadPanel.add(label5);
         downloadPanel.setPreferredSize(new Dimension(1000,100));
 
-        startTime = LocalDateTime.now();
-        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, startTime, queue);
+        addTime = LocalDateTime.now();
+        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, addTime, queue, startTime);
         this.address = address;
         downloadPanel.setPreferredSize(new Dimension(970,100));
 
         isSelected = false;
         this.queue = queue;
-        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link,startTime);
+        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime);
 
     }
 
@@ -141,7 +144,7 @@ public class Download{
     /**
      * @return start time of download
      */
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDateTime getAddTime() {
+        return addTime;
     }
 }
