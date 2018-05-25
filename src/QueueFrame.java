@@ -119,6 +119,37 @@ public class QueueFrame extends JFrame{
 
         this.settingForm = settingForm;
         this.queue = queue;
+
+        JPopupMenu sortMenu = new JPopupMenu();
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by name   " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                queue.sortBy("name",true);
+                updateDownloadList();
+            }
+        }));
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by size  " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                queue.sortBy("size",true);
+                updateDownloadList();
+            }
+        }));
+        sortMenu.add(new JMenuItem(new AbstractAction("Sort by start time   " + "⇅") {
+            public void actionPerformed(ActionEvent e) {
+                queue.sortBy("time", true);
+                updateDownloadList();
+            }
+        }));
+
+
+        sortButton.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                sortMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+
+        if(FileUtils.readQueue(queue) != null)
+            queue.setDownloads(FileUtils.readQueue(queue));
+        updateDownloadList();
     }
 
     /**
@@ -174,24 +205,10 @@ public class QueueFrame extends JFrame{
                 d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(queue.getIndex(d));
         }
-        FileUtils.writeDownload(queue);
+        FileUtils.writeQueue(queue);
         downloadsPanel.revalidate();
         downloadsPanel.repaint();
     }
-
-    private void showAboutMe() {
-        JOptionPane.showMessageDialog(null, "Programmer:       Mohamad Chaman-Motlagh\n" +
-                "Student number:      9631018\n" +
-                "Start date:      2/5/2018\n" +
-                "End date:      -\n" +
-                "This programme is a simple download manager,\n" +
-                "you can use start a new download by using + button\n" +
-                "and or remove it using specified buttons\n" +
-                "Mnemonics keys are the same as accelerator keys (without ALT)\n" +
-                "Close button wont work if your OS won't allow system tray\n" +
-                "Thanks for using MY DownloadManager");
-    }
-
     /*
     Listener for downloads
      */

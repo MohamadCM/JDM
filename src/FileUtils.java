@@ -207,9 +207,8 @@ public  class FileUtils {
         for(Download d : queue.getDownloads())
             output.add(d.getDownloadInfo());
         file = new File("./files/queue.jdm");
-        if (file.exists()) {
+        if (file.exists())
             file.delete();
-        }
         try {
             file.createNewFile();
         } catch (IOException e) {
