@@ -1,10 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.Date;
 
@@ -32,7 +29,7 @@ public class NewDownloadForm {
     private JPanel atYPanel;
     private JSpinner atYTime;
     private JPanel downPanel;
-    private JTextField queuName;
+    private JCheckBox queueName;
     private JButton cancelButton;
     private JButton okButton;
     private Queue queue;
@@ -113,10 +110,11 @@ public class NewDownloadForm {
         midPanel.add(atYPanel);
         mainFrame.add(midPanel, BorderLayout.CENTER);
         downPanel = new JPanel(new GridLayout(2,2,5,5));
-        downPanel.add(new JLabel("Add to queue: "));
-        queuName = new JTextField("Default Queue");
-        queuName.setFocusable(false);
-        downPanel.add(queuName);
+        downPanel.add(new JLabel("Do you want to add to queue? "));
+        queueName = new JCheckBox("Add to queue");
+        queueName.setHorizontalAlignment(SwingConstants.RIGHT);
+        queueName.setFocusable(false);
+        downPanel.add(queueName);
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
         downPanel.add(cancelButton);
@@ -125,6 +123,7 @@ public class NewDownloadForm {
         okButton.addMouseListener(new MyMouseListener());
         downPanel.setBorder(new EmptyBorder(5,5,5,5));
         mainFrame.add(downPanel, BorderLayout.SOUTH);
+
     }
 
     /**
@@ -159,9 +158,17 @@ public class NewDownloadForm {
                     return;
                 }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), queue);
-                    queue.addDownload(d);
-                    d.setIndexInDownloads(queue.getIndex(d));
+                    if (queueName.isSelected())
+                    {
+                        Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue());
+                        QueueFrame.getQueue().addDownload(d);
+                        d.setIndexInDownloads(QueueFrame.getQueue().getIndex(d));
+                    }
+                    else {
+                        Download d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), queue);
+                        queue.addDownload(d);
+                        d.setIndexInDownloads(queue.getIndex(d));
+                    }
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
                     QueueFrame.updateDownloadList();
@@ -178,7 +185,19 @@ public class NewDownloadForm {
                     return;
                 }
                 if(!link.getText().equals("") && !name.getText().equals("")) {
-                    queue.getDownloads().add(new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), queue));
+                    if (queueName.isSelected())
+                    {
+                        Download d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue());
+                        QueueFrame.getQueue().addDownload(d);
+                        d.setIndexInDownloads(QueueFrame.getQueue().getIndex(d));
+                    }
+                    else {
+                        Download d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), queue);
+                        queue.addDownload(d);
+                        System.out.print("");
+                        d.setIndexInDownloads(queue.getIndex(d));
+                    }
+                    System.out.print("");
                     mainFrame.dispose();
                     MainForm.updateDownloadList();
                     QueueFrame.updateDownloadList();
