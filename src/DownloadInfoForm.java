@@ -53,6 +53,7 @@ public class DownloadInfoForm {
         midPanel.add(sizeLable);
         midPanel.add(xPercent);
         midPanel.add(yMB);
+
         numberInQueue = new JSpinner(new SpinnerNumberModel());
         numberInQueue.setFocusable(false);
         numberInQueue.setValue((Integer)indexInDownloads);

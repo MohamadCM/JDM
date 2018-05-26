@@ -85,6 +85,7 @@ public class MainForm {
         newDownloadButton.addMouseListener(mouseListener);
 
         pauseButton = new JButton("", new ImageIcon("Images/pause.png"));
+        pauseButton.setToolTipText("Pause a download");
         pauseButton.setFocusable(false);
         pauseButton.addMouseListener(mouseListener);
 
