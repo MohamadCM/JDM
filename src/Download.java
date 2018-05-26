@@ -147,4 +147,9 @@ public class Download{
     public LocalDateTime getAddTime() {
         return addTime;
     }
+
+    public JProgressBar getProgressBar()
+    {
+        return progressBar;
+    }
 }

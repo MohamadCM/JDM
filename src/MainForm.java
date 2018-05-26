@@ -401,7 +401,7 @@ public class MainForm {
         for (Download d : queue.getDownloads()) {
             downloadPanel.add(d.getDownloadPanel());
             d.getDownloadPanel().setBackground(Color.WHITE);
-            if(d.getDownloadPanel().getMouseListeners().length == 0)
+            if (d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(queue.getIndex(d));
         }

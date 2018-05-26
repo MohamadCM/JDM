@@ -125,6 +125,7 @@ public class SettingForm {
                 UIManager.setLookAndFeel(defaults.getLookAndFeelInfo());
                 SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
                 SwingUtilities.updateComponentTreeUI(mainFrame);
+                SwingUtilities.updateComponentTreeUI(QueueFrame.getFrames()[0]);
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (InstantiationException e) {
@@ -178,6 +179,8 @@ public class SettingForm {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
                     SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
                     SwingUtilities.updateComponentTreeUI(mainFrame);
+
+                    SwingUtilities.updateComponentTreeUI(QueueFrame.getFrames()[0]);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (InstantiationException e) {
@@ -217,6 +220,8 @@ public class SettingForm {
                     UIManager.setLookAndFeel(lookAndFeelInfoBox.getSelectedItem().toString());
                     SwingUtilities.updateComponentTreeUI(MainForm.getDownloadManager());
                     SwingUtilities.updateComponentTreeUI(mainFrame);
+
+                    SwingUtilities.updateComponentTreeUI(QueueFrame.getFrames()[0]);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (InstantiationException e) {

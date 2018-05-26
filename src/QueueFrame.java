@@ -281,4 +281,6 @@ public class QueueFrame extends JFrame{
             if(d.getName().contains(searchField.getText()) || d.getLink().contains(searchField.getText()))
                 d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
     }
+
+
 }
