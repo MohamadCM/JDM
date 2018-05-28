@@ -22,10 +22,13 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
      */
     public DownloadUtil(Download download) throws IOException {
         this.download = download;
-        url = new URL(download.getLink());
+        if(!download.getLink().startsWith("http://") && !download.getLink().startsWith("https://"))
+             url = new URL("http://" + download.getLink());
+        else
+            url = new URL(download.getLink());
         System.out.println(url);
         urlConnection = (HttpURLConnection) url.openConnection();
-        if(urlConnection.getContentLength() == HttpURLConnection.HTTP_OK){
+        if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
             System.out.println("Connected!");
@@ -36,7 +39,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     protected void process(List<Integer> list) {
         super.process(list);
         MainForm.repaintForm();
-        QueueFrame.repaintForm();
+//        QueueFrame.repaintForm();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         if (inputStream == null)
             throw new IOException();
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-        FileOutputStream outputStream = new FileOutputStream(new File(download.getName()));
+        FileOutputStream outputStream = new FileOutputStream(new File(download.getAddress() + "/" + download.getName()));
         int bytesRead = 0;
         int totalRead = 0;
         byte[] buffer = new byte[2048];
@@ -57,7 +60,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
             download.setDownloadedVolume((int) totalRead/1000);
             download.setPercentDownload(bytesRead / size);
             MainForm.repaintForm();
-            QueueFrame.repaintForm();
+           // QueueFrame.repaintForm();
             publish(getProgress());
         }
         return null;
