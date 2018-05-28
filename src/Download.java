@@ -26,6 +26,7 @@ public class Download{
     private DownloadInfo downloadInfo;
     private Queue queue;
     private LocalDateTime startTime;
+    private boolean isStarted;
 
     public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime)
     {
@@ -37,6 +38,7 @@ public class Download{
         this.downloadRate = downloadRate;
         this.link = link;
         this.startTime = startTime;
+        isStarted = false;
 
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         JLabel label1 = new JLabel("Name: " + name);
@@ -152,4 +154,28 @@ public class Download{
     {
         return progressBar;
     }
+
+    /**
+     * @return save location of download as a String
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    public void setPercentDownload(double percentDownload) {
+        this.percentDownload = percentDownload;
+    }
+
+    public double getPercentDownload() {
+        return percentDownload;
+    }
+
+    public boolean isStarted() {
+        return isSelected;
+    }
+
+    public void setIsStarded(boolean isStartded) {
+        this.isStarted = isStartded;
+    }
+
 }

@@ -2,13 +2,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 /**
  * this class creates Frame of download queue
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
-public class QueueFrame extends JFrame{
+public class QueueFrame{
+    private static JFrame mainFrame;
     private static JPanel downloadsPanel;
     private JToolBar toolBar;
     private JButton newDownloadButton;
@@ -25,9 +27,9 @@ public class QueueFrame extends JFrame{
 
     private SettingForm settingForm;
     public QueueFrame(Queue queue, SettingForm settingForm){
-        super("Queue");
-        setSize(900,500);
-        setLocationRelativeTo(MainForm.getDownloadManager());
+        mainFrame = new JFrame("Queue");
+        mainFrame.setSize(900,500);
+        mainFrame.setLocationRelativeTo(MainForm.getDownloadManager());
 
         downloadsPanel = new JPanel(new GridLayout(20,1,1,1));
         downloadsPanel.setBorder(new EmptyBorder(5,5,5,5));
@@ -36,8 +38,8 @@ public class QueueFrame extends JFrame{
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(50, 30, 300, 50);
-        setLayout(new BorderLayout());
-        add(scrollPane, BorderLayout.CENTER);
+        mainFrame.setLayout(new BorderLayout());
+        mainFrame.add(scrollPane, BorderLayout.CENTER);
 
         mouseListener = new MyMouseListener();
 
@@ -114,8 +116,8 @@ public class QueueFrame extends JFrame{
         toolBar.add(searchField);
         toolBar.add(searchButton);
 
-        add(toolBar, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        mainFrame.add(toolBar, BorderLayout.NORTH);
+        mainFrame.add(scrollPane, BorderLayout.CENTER);
 
         this.settingForm = settingForm;
         this.queue = queue;
@@ -157,7 +159,7 @@ public class QueueFrame extends JFrame{
      */
     public void showGUI()
     {
-        setVisible(true);
+        mainFrame.setVisible(true);
     }
 
     /**
@@ -204,6 +206,17 @@ public class QueueFrame extends JFrame{
             if(d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(queue.getIndex(d));
+            DownloadUtil downloadUtil = null;
+            try {
+                if(!d.isStarted()) {
+                    downloadUtil = new DownloadUtil(d);
+                    downloadUtil.execute();
+                    d.setIsStarded(true);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         FileUtils.writeQueue(queue);
         downloadsPanel.revalidate();
@@ -282,5 +295,18 @@ public class QueueFrame extends JFrame{
                 d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
     }
 
+    public static void repaintForm() {
+        SwingUtilities.invokeLater(()-> {
+            mainFrame.revalidate();
+            mainFrame.repaint();
+        });
+        for(Download d : queue.getDownloads())
+            d.getProgressBar().setValue((int) Math.abs(d.getPercentDownload()));
+    }
 
+
+    public static JFrame getMainFrame()
+    {
+        return mainFrame;
+    }
 }

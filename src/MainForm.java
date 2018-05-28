@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * This class creates main form of the programme
@@ -336,8 +337,6 @@ public class MainForm {
         mainQueue = new Queue("Main queue");
 
         queueFrame = new QueueFrame(mainQueue, settingForm);
-
-
         updateDownloadList();
     }
 
@@ -404,6 +403,17 @@ public class MainForm {
             if (d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(queue.getIndex(d));
+            DownloadUtil downloadUtil = null;
+            try {
+                if(!d.isStarted()) {
+                    downloadUtil = new DownloadUtil(d);
+                    downloadUtil.execute();
+                    d.setIsStarded(true);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         FileUtils.writeDownload(queue);
         downloadPanel.revalidate();
@@ -506,9 +516,12 @@ public class MainForm {
     }
 
     public static void repaintForm() {
-        downloadManager.revalidate();
-        downloadManager.repaint();
-
+        SwingUtilities.invokeLater(()-> {
+            downloadPanel.revalidate();
+            downloadPanel.repaint();
+        });
+        for(Download d : queue.getDownloads())
+            d.getProgressBar().setValue((int) Math.abs(d.getPercentDownload()));
     }
 
     /**
