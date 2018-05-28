@@ -178,4 +178,8 @@ public class Download{
         this.isStarted = isStartded;
     }
 
+    public DownloadInfoForm getDownloadInfoForm()
+    {
+        return downloadInfoForm;
+    }
 }

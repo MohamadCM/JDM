@@ -296,10 +296,8 @@ public class QueueFrame{
     }
 
     public static void repaintForm() {
-        SwingUtilities.invokeLater(()-> {
             mainFrame.revalidate();
             mainFrame.repaint();
-        });
         for(Download d : queue.getDownloads())
             d.getProgressBar().setValue((int) Math.abs(d.getPercentDownload()));
     }

@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -111,5 +112,4 @@ public class DownloadInfo implements Serializable {
     public void setStartTime(LocalDateTime startTime){
         this.startTime = startTime;
     }
-
 }

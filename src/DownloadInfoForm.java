@@ -20,6 +20,7 @@ public class DownloadInfoForm {
     private int indexInDownloads;
     private JSpinner numberInQueue;
     private Queue queue;
+    private JProgressBar progressBar;
     /**
      * Requires name of the download
      * @param name
@@ -44,7 +45,7 @@ public class DownloadInfoForm {
         upPanel.add(nameLable);
         upPanel.add(timeLabe);
         frame.add(upPanel);
-        JProgressBar progressBar = new JProgressBar();
+        progressBar = new JProgressBar();
         frame.add(progressBar);
         JPanel midPanel = new JPanel(new GridLayout(1,3,5,5));
         JLabel sizeLable = new JLabel("Size: " + volume + "MB");
@@ -125,4 +126,5 @@ public class DownloadInfoForm {
         this.indexInDownloads = indexInDownloads;
         numberInQueue.setValue((Integer)indexInDownloads);
     }
+
 }

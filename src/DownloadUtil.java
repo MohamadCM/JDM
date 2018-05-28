@@ -26,7 +26,6 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
              url = new URL("http://" + download.getLink());
         else
             url = new URL(download.getLink());
-        System.out.println(url);
         urlConnection = (HttpURLConnection) url.openConnection();
         if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
             contentLenth = urlConnection.getContentLength();
@@ -39,7 +38,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     protected void process(List<Integer> list) {
         super.process(list);
         MainForm.repaintForm();
-//        QueueFrame.repaintForm();
+        QueueFrame.repaintForm();
     }
 
     @Override
@@ -53,14 +52,16 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         byte[] buffer = new byte[2048];
         int size = urlConnection.getContentLength();
         while((bytesRead = bufferedInputStream.read(buffer) ) > 0) {
-            if(Thread.interrupted())
+            if(Thread.interrupted() || bytesRead <= 0)
                 break;
             outputStream.write(buffer, 0 , bytesRead);
-            totalRead += bytesRead;
-            download.setDownloadedVolume((int) totalRead/1000);
-            download.setPercentDownload(bytesRead / size);
+            if(bytesRead != 0)
+                totalRead += bytesRead;
+            download.setDownloadedVolume(totalRead);
+            download.setPercentDownload((totalRead * 100 / size));
+            System.out.println((totalRead * 100) / size);
             MainForm.repaintForm();
-           // QueueFrame.repaintForm();
+            QueueFrame.repaintForm();
             publish(getProgress());
         }
         return null;
