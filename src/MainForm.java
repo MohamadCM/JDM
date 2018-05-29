@@ -69,7 +69,7 @@ public class MainForm {
         mouseListener = new MyMouseListener();
         downloadManager = new MyJFrame(title);
         downloadManager.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        downloadManager.setSize(1120, 900);
+        downloadManager.setSize(1140, 920);
         downloadManager.setLocationRelativeTo(null);
         downloadManager.setLayout(new BorderLayout());
         settingForm = new SettingForm();
@@ -303,8 +303,6 @@ public class MainForm {
 
         downloadPanelMouseLister = new DPanelMouseLister();
 
-        queue.sortBy("time",true);
-        updateDownloadList();
 
         sortMenu = new JPopupMenu();
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by name   " + "⇅") {
@@ -337,6 +335,10 @@ public class MainForm {
         mainQueue = new Queue("Main queue");
 
         queueFrame = new QueueFrame(mainQueue, settingForm);
+        queue.sortBy("time",true);
+
+        for(Download d: queue.getDownloads())
+            d.getProgressBar().setValue((int) d.getDownloadInfo().getPercentDownload());
         updateDownloadList();
     }
 
@@ -405,7 +407,7 @@ public class MainForm {
             d.setIndexInDownloads(queue.getIndex(d));
             DownloadUtil downloadUtil = null;
             try {
-                if(!d.isStarted()) {
+                if(!d.isStarted() && !d.isFinished()) {
                     downloadUtil = new DownloadUtil(d);
                     downloadUtil.execute();
                     d.setIsStarded(true);
@@ -413,7 +415,6 @@ public class MainForm {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         FileUtils.writeDownload(queue);
         downloadPanel.revalidate();
@@ -443,7 +444,18 @@ public class MainForm {
         public void mousePressed(MouseEvent mouseEvent) {
             for (Download d : queue.getDownloads()) {
                 if (mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel())) {
-                    System.out.println("Double Click on download" + mouseEvent.getSource());
+                       if(d.getIsSelected() && d.isFinished()) {
+
+                           File file = new File(d.getAddress() + "/" + d.getName());
+                           if(!file.exists())
+                               return;
+                           Desktop desktop = Desktop.getDesktop();
+                           try {
+                               desktop.open(file);
+                           } catch (IOException e) {
+                               e.printStackTrace();
+                           }
+                       }
                     break;
                 }
                 if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
@@ -508,8 +520,11 @@ public class MainForm {
                 delete();
             if (actionEvent.getActionCommand().equals("About me:)                              "))
                 showAboutMe();
-            if (actionEvent.getActionCommand().equals("Exit:("))
+            if (actionEvent.getActionCommand().equals("Exit:(")) {
+                FileUtils.writeDownload(queue);
+                FileUtils.writeQueue(mainQueue);
                 System.exit(0);
+            }
             if (actionEvent.getActionCommand().equals("Export to zip"))
                 FileUtils.exportToZip();
         }

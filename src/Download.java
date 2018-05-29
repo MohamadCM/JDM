@@ -27,6 +27,8 @@ public class Download{
     private Queue queue;
     private LocalDateTime startTime;
     private boolean isStarted;
+    private boolean isFinished;
+
     private JLabel nameLabel;
     private JLabel mbDownloaded;
     private JLabel downRateLabel;
@@ -34,7 +36,7 @@ public class Download{
     private JLabel percentCompeleted;
     private JLabel kbDownloadedLabel;
 
-    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime)
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime,boolean isFinished)
     {
         this.name = name;
         this.address = address;
@@ -45,10 +47,11 @@ public class Download{
         this.link = link;
         this.startTime = startTime;
         isStarted = false;
+        this.isFinished = isFinished;
 
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         nameLabel = new JLabel("Name: " + name);
-        downRateLabel = new JLabel("              Download rate:  " + this.downloadRate);
+        downRateLabel = new JLabel("          Download rate:  " + this.downloadRate + "KB/s");
         sizeLabel = new JLabel("Size: " + volume + "KB");
         percentCompeleted = new JLabel("         \t                  " + this.percentDownload + "% Downloaded");
         kbDownloadedLabel = new JLabel("              " + this.downloadedVolume + "KB Downloaded");
@@ -68,7 +71,7 @@ public class Download{
 
         isSelected = false;
         this.queue = queue;
-        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime);
+        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime, isFinished);
 
     }
 
@@ -211,8 +214,22 @@ public class Download{
         this.isStarted = isStartded;
     }
 
-    public DownloadInfoForm getDownloadInfoForm()
-    {
+    public DownloadInfoForm getDownloadInfoForm() {
         return downloadInfoForm;
+    }
+
+    /**
+     * @return code {@code true} is the download has been finished
+     */
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    /**
+     * Set finish stats of this download
+     * @param isFinished is current finishing stat of this download
+     */
+    public void setFinished(boolean isFinished) {
+        this.isFinished = isFinished;
     }
 }

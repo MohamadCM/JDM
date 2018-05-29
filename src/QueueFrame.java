@@ -152,6 +152,12 @@ public class QueueFrame{
         if(FileUtils.readQueue(queue) != null)
             queue.setDownloads(FileUtils.readQueue(queue));
         updateDownloadList();
+
+        queue.sortBy("time", true);
+
+
+        for(Download d: queue.getDownloads())
+            d.getProgressBar().setValue((int) d.getDownloadInfo().getPercentDownload());
     }
 
     /**
@@ -208,7 +214,7 @@ public class QueueFrame{
             d.setIndexInDownloads(queue.getIndex(d));
             DownloadUtil downloadUtil = null;
             try {
-                if(!d.isStarted()) {
+                if(!d.isStarted() && !d.isFinished()) {
                     downloadUtil = new DownloadUtil(d);
                     downloadUtil.execute();
                     d.setIsStarded(true);

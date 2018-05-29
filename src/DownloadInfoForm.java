@@ -21,6 +21,10 @@ public class DownloadInfoForm {
     private JSpinner numberInQueue;
     private Queue queue;
     private JProgressBar progressBar;
+    private JLabel sizeLable;
+    private JLabel xPercent;
+    private JLabel yMB;
+    private JLabel downRate;
     /**
      * Requires name of the download
      * @param name
@@ -48,9 +52,10 @@ public class DownloadInfoForm {
         progressBar = new JProgressBar();
         frame.add(progressBar);
         JPanel midPanel = new JPanel(new GridLayout(1,3,5,5));
-        JLabel sizeLable = new JLabel("Size: " + volume + "MB");
-        JLabel xPercent = new JLabel(percentDownload + "% Downloaded");
-        JLabel yMB = new JLabel(downloadedVolume + "MB downloaded");
+        sizeLable = new JLabel("Size: " + volume + "MB");
+        xPercent = new JLabel(percentDownload + "% Downloaded");
+        yMB = new JLabel(downloadedVolume + "MB downloaded");
+
         midPanel.add(sizeLable);
         midPanel.add(xPercent);
         midPanel.add(yMB);
@@ -66,10 +71,12 @@ public class DownloadInfoForm {
         numberInQueuePanel.add(numberInQueueLabel);
         numberInQueuePanel.add(numberInQueue);
 
+        downRate = new JLabel("Download speed: " + downloadRate);
+
         frame.add(midPanel);
         frame.add(new JLabel("Download link: " + link));
         frame.add(new JLabel("Download to: " + address));
-        frame.add(new JLabel("Download speed: " + downloadRate));
+        frame.add(downRate);
         frame.add(numberInQueuePanel);
 
         okButton = new JButton("OK");
@@ -129,9 +136,16 @@ public class DownloadInfoForm {
 
     /**
      * Updates status of this download in the form
-     * @param progressBarValue
+     * @param percentDownloaded
      */
-    public void update(int progressBarValue){
-        progressBar.setValue(progressBarValue);
+    public void updateForm(int percentDownloaded, long volume, long downloadedVolume, int downloadRate){
+        progressBar.setValue(percentDownloaded);
+        sizeLable.setText("Size: " + volume + "KB");
+        xPercent.setText(percentDownloaded + "% Downloaded");
+        yMB.setText(downloadedVolume + "KB downloaded");
+        downRate.setText("Download speed: " + downloadRate + "KB/s");
+        progressBar.setValue(percentDownloaded);
+        frame.revalidate();
+        frame.repaint();
     }
 }

@@ -19,8 +19,9 @@ public class DownloadInfo implements Serializable {
     private String link;
     private LocalDateTime addTime;
     private LocalDateTime startTime;
+    private boolean isFinished;
 
-    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime) {
+    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime, boolean isFinished) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -30,6 +31,7 @@ public class DownloadInfo implements Serializable {
         this.link = link;
         this.addTime = addTime;
         this.startTime = startTime;
+        this.isFinished = isFinished;
     }
 
     public String getName() {
@@ -111,5 +113,36 @@ public class DownloadInfo implements Serializable {
      */
     public void setStartTime(LocalDateTime startTime){
         this.startTime = startTime;
+    }
+
+    /**
+     * Update info of each download
+     * @param volume
+     * @param downloadedVolume
+     * @param percentDownload
+     * @param downloadRate
+     * @param isFinished
+     */
+    public void update(long volume,long downloadedVolume , double percentDownload , long downloadRate, boolean isFinished) {
+        this.volume = volume;
+        this.downloadedVolume = downloadedVolume;
+        this.percentDownload = percentDownload;
+        this.downloadRate = downloadRate;
+        this.isFinished = isFinished;
+    }
+
+    /**
+     * @return code {@code true} is the download has been finished
+     */
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    /**
+     * Set finish stats of this download
+     * @param isFinished is current finishing stat of this download
+     */
+    public void setFinished(boolean isFinished) {
+        this.isFinished = isFinished;
     }
 }
