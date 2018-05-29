@@ -148,11 +148,15 @@ public class NewDownloadForm {
     private class MyMouseListener extends MouseAdapter
     {
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
+        public void mousePressed(MouseEvent mouseEvent)  {
             if (mouseEvent.getSource().equals(selectAddress)){
                 fileChooser.showDialog(null, "Confirm");
                 if(fileChooser.getCurrentDirectory().toString() != null && !fileChooser.getCurrentDirectory().toString().equals(""))
+                    try {
                     saveAdress = fileChooser.getSelectedFile().toString();
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
+                    }
             }
             if(mouseEvent.getSource().equals(cancelButton))
                 mainFrame.dispose();
@@ -166,21 +170,21 @@ public class NewDownloadForm {
                     Download d;
                     if (queueName.isSelected()) {
                         if(afterX.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false );
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false , false);
                         else if(atY.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(),LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()),false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(),LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()),false, false);
                         else
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false, false);
                         QueueFrame.getQueue().addDownload(d);
                         d.setIndexInDownloads(QueueFrame.getQueue().getIndex(d));
                     }
                     else {
                         if(afterX.isSelected()) {
-                            d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false);
+                            d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false, false);
                         }else if(atY.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(),LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(),LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false, false);
                         else
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false, false);
                         queue.addDownload(d);
                         d.setIndexInDownloads(queue.getIndex(d));
                     }
@@ -203,22 +207,22 @@ public class NewDownloadForm {
                         Download d;
                     if (queueName.isSelected()) {
                         if(afterX.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false );
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false, false );
                         else if(atY.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false, false);
                         else
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false, false);
 
                         QueueFrame.getQueue().addDownload(d);
                         d.setIndexInDownloads(QueueFrame.getQueue().getIndex(d));
                     }
                     else {
                         if(afterX.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false);
+                            d = new Download(name.getText(), saveAdress, size, 0, 0, 0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now().plusMinutes(Long.parseLong(afterXTimer.getValue().toString())), false, false);
                         else if(atY.isSelected())
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.ofInstant(((Date)atYTime.getValue()).toInstant(), ZoneId.systemDefault()), false, false);
                         else
-                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false);
+                            d = new Download(name.getText(), saveAdress, size, 0,0,0, link.getText(), QueueFrame.getQueue(), LocalDateTime.now(), false, false);
                         queue.addDownload(d);
                         System.out.print("");
                         d.setIndexInDownloads(queue.getIndex(d));

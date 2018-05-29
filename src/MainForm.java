@@ -362,8 +362,14 @@ public class MainForm {
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if (mouseEvent.getSource().equals(pauseButton))
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+
             if (mouseEvent.getSource().equals(cancelButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+                    }
+
             if (mouseEvent.getSource().equals(newDownload))
                 addDownload();
             if (mouseEvent.getSource().equals(remove))
@@ -405,15 +411,9 @@ public class MainForm {
             if (d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(queue.getIndex(d));
-            DownloadUtil downloadUtil = null;
-            try {
-                if(!d.isStarted() && !d.isFinished()) {
-                    downloadUtil = new DownloadUtil(d);
-                    downloadUtil.execute();
-                    d.setIsStarded(true);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(!d.isStarted() && !d.isFinished() && !d.isCancelled()) {
+                d.getDownloadUtil().execute();
+                d.setIsStarded(true);
             }
         }
         FileUtils.writeDownload(queue);
@@ -515,7 +515,11 @@ public class MainForm {
             if (actionEvent.getActionCommand().equals("Pause"))
                 System.out.println("Source: " + actionEvent.getSource());
             if (actionEvent.getActionCommand().equals("Cancel"))
-                System.out.println("Source: " + actionEvent.getSource());
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+                    }
             if (actionEvent.getActionCommand().equals("Remove"))
                 delete();
             if (actionEvent.getActionCommand().equals("About me:)                              "))

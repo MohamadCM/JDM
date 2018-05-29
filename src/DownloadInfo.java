@@ -20,8 +20,8 @@ public class DownloadInfo implements Serializable {
     private LocalDateTime addTime;
     private LocalDateTime startTime;
     private boolean isFinished;
-
-    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime, boolean isFinished) {
+    private boolean isCancelled;
+    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime, boolean isFinished , boolean isCancelled) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -32,6 +32,7 @@ public class DownloadInfo implements Serializable {
         this.addTime = addTime;
         this.startTime = startTime;
         this.isFinished = isFinished;
+        this.isCancelled = isCancelled;
     }
 
     public String getName() {
@@ -144,5 +145,20 @@ public class DownloadInfo implements Serializable {
      */
     public void setFinished(boolean isFinished) {
         this.isFinished = isFinished;
+    }
+
+    /**
+     * Show whether the download is cancelled or not
+     * @return {@code true} if the download is cancelled, {@code false} otherwise
+     */
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    /**
+     * Cancel the download
+     */
+    public void cancel() {
+        isCancelled = true;
     }
 }

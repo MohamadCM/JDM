@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -26,8 +27,10 @@ public class Download{
     private DownloadInfo downloadInfo;
     private Queue queue;
     private LocalDateTime startTime;
+
     private boolean isStarted;
     private boolean isFinished;
+    private boolean isCancelled;
 
     private JLabel nameLabel;
     private JLabel mbDownloaded;
@@ -36,8 +39,9 @@ public class Download{
     private JLabel percentCompeleted;
     private JLabel kbDownloadedLabel;
 
-    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime,boolean isFinished)
-    {
+    private DownloadUtil downloadUtil;
+
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime,boolean isFinished, boolean isCancelled) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -48,6 +52,12 @@ public class Download{
         this.startTime = startTime;
         isStarted = false;
         this.isFinished = isFinished;
+        this.isCancelled = isCancelled;
+        try {
+            downloadUtil = new DownloadUtil(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
         nameLabel = new JLabel("Name: " + name);
@@ -71,7 +81,7 @@ public class Download{
 
         isSelected = false;
         this.queue = queue;
-        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime, isFinished);
+        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime, isFinished, isCancelled);
 
     }
 
@@ -231,5 +241,28 @@ public class Download{
      */
     public void setFinished(boolean isFinished) {
         this.isFinished = isFinished;
+    }
+
+    /**
+     * Cancel the download
+     */
+    public void cancel() {
+        isCancelled = true;
+        downloadInfo.cancel();
+    }
+
+    /**
+     * Show whether the download is cancelled or not
+     * @return {@code true} if the download is cancelled, {@code false} otherwise
+     */
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    /**
+     * @return DownloadUtil for this download
+     */
+    public DownloadUtil getDownloadUtil() {
+        return downloadUtil;
     }
 }

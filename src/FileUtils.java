@@ -66,7 +66,7 @@ public  class FileUtils {
             e.printStackTrace();
         }
         for(DownloadInfo downloadInfo : downloadInfos) {
-            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime(), downloadInfo.isFinished()));
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime(), downloadInfo.isFinished(), downloadInfo.isCancelled()));
         }
         return output;
     }
@@ -250,7 +250,7 @@ public  class FileUtils {
             e.printStackTrace();
         }
         for(DownloadInfo downloadInfo : downloadInfos) {
-            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime(), downloadInfo.isFinished()));
+            output.add(new Download(downloadInfo.getName(),downloadInfo.getAddress(),downloadInfo.getVolume(),downloadInfo.getDownloadedVolume(),downloadInfo.getPercentDownload(),downloadInfo.getDownloadRate(),downloadInfo.getLink(), queue, downloadInfo.getStartTime(), downloadInfo.isFinished(), downloadInfo.isCancelled()));
         }
         return output;
     }

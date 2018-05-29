@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -189,8 +190,14 @@ public class QueueFrame{
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if (mouseEvent.getSource().equals(pauseButton))
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+
             if (mouseEvent.getSource().equals(cancelButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+            }
+
             if(mouseEvent.getSource().equals(searchButton))
                 findAndMark();
         }
@@ -212,15 +219,9 @@ public class QueueFrame{
             if(d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(queue.getIndex(d));
-            DownloadUtil downloadUtil = null;
-            try {
-                if(!d.isStarted() && !d.isFinished()) {
-                    downloadUtil = new DownloadUtil(d);
-                    downloadUtil.execute();
-                    d.setIsStarded(true);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(!d.isStarted() && !d.isFinished() && !d.isCancelled()) {
+                d.getDownloadUtil().execute();
+                d.setIsStarded(true);
             }
 
         }
@@ -238,8 +239,18 @@ public class QueueFrame{
         public void mousePressed(MouseEvent mouseEvent) {
             for (Download d : queue.getDownloads()) {
                 if (mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel())) {
-                    System.out.println("Double Click on download" + mouseEvent.getSource());
-                    break;
+                    if(d.getIsSelected() && d.isFinished()) {
+
+                        File file = new File(d.getAddress() + "/" + d.getName());
+                        if(!file.exists())
+                            return;
+                        Desktop desktop = Desktop.getDesktop();
+                        try {
+                            desktop.open(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
                     d.showDownloadInfoForm();
