@@ -127,4 +127,11 @@ public class DownloadInfoForm {
         numberInQueue.setValue((Integer)indexInDownloads);
     }
 
+    /**
+     * Updates status of this download in the form
+     * @param progressBarValue
+     */
+    public void update(int progressBarValue){
+        progressBar.setValue(progressBarValue);
+    }
 }

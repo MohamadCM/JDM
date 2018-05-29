@@ -520,8 +520,6 @@ public class MainForm {
             downloadPanel.revalidate();
             downloadPanel.repaint();
         });
-        for(Download d : queue.getDownloads())
-            d.getProgressBar().setValue((int) Math.abs(d.getPercentDownload()));
     }
 
     /**

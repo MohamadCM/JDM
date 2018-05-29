@@ -27,6 +27,12 @@ public class Download{
     private Queue queue;
     private LocalDateTime startTime;
     private boolean isStarted;
+    private JLabel nameLabel;
+    private JLabel mbDownloaded;
+    private JLabel downRateLabel;
+    private JLabel sizeLabel;
+    private JLabel percentCompeleted;
+    private JLabel kbDownloadedLabel;
 
     public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime)
     {
@@ -41,18 +47,18 @@ public class Download{
         isStarted = false;
 
         downloadPanel = new JPanel(new GridLayout(2,3,10,10));
-        JLabel label1 = new JLabel("Name: " + name);
-        JLabel label2 = new JLabel("              Download rate:  " + this.downloadRate);
-        JLabel label3 = new JLabel("Size: " + volume + "MB");
-        JLabel label4 = new JLabel("         \t                  " + this.percentDownload + "% Downloaded");
-        JLabel label5 = new JLabel("              " + this.downloadedVolume + "MB Downloaded");
+        nameLabel = new JLabel("Name: " + name);
+        downRateLabel = new JLabel("              Download rate:  " + this.downloadRate);
+        sizeLabel = new JLabel("Size: " + volume + "KB");
+        percentCompeleted = new JLabel("         \t                  " + this.percentDownload + "% Downloaded");
+        kbDownloadedLabel = new JLabel("              " + this.downloadedVolume + "KB Downloaded");
         progressBar = new JProgressBar();
-        downloadPanel.add(label1);
+        downloadPanel.add(nameLabel);
         downloadPanel.add(progressBar);
-        downloadPanel.add(label2);
-        downloadPanel.add(label3);
-        downloadPanel.add(label4);
-        downloadPanel.add(label5);
+        downloadPanel.add(downRateLabel);
+        downloadPanel.add(sizeLabel);
+        downloadPanel.add(percentCompeleted);
+        downloadPanel.add(kbDownloadedLabel);
         downloadPanel.setPreferredSize(new Dimension(1000,100));
 
         addTime = LocalDateTime.now();
@@ -120,6 +126,7 @@ public class Download{
      */
     public void setDownloadedVolume(long downloadedVolume) {
         this.downloadedVolume = downloadedVolume;
+        kbDownloadedLabel.setText("              " + this.downloadedVolume + "KB Downloaded");
     }
 
     /**
@@ -144,6 +151,15 @@ public class Download{
     }
 
     /**
+     * Sets Volume of this file
+     * @param volume
+     */
+    public void setVolume(long volume) {
+        this.volume = volume;
+        sizeLabel.setText("Size: " + volume/1000 + "KB");
+    }
+
+    /**
      * @return start time of download
      */
     public LocalDateTime getAddTime() {
@@ -162,10 +178,27 @@ public class Download{
         return address;
     }
 
+    /**
+     * Sets Percent completed for this download
+     * @param percentDownload
+     */
     public void setPercentDownload(double percentDownload) {
         this.percentDownload = percentDownload;
+        percentCompeleted.setText("         \t                  " + this.percentDownload + "% Downloaded");
     }
 
+    /**
+     * Sets download rate
+     * @param downloadRate is current download rate
+     */
+    public void setDownloadRate(long downloadRate) {
+        this.downloadRate = downloadRate;
+        downRateLabel.setText("          Download rate:  " + this.downloadRate + "KB/s");
+    }
+
+    /**
+     * @return percent downloaded
+     */
     public double getPercentDownload() {
         return percentDownload;
     }
