@@ -217,11 +217,11 @@ public class Download{
     }
 
     public boolean isStarted() {
-        return isSelected;
+        return isStarted;
     }
 
-    public void setIsStarded(boolean isStartded) {
-        this.isStarted = isStartded;
+    public void setIsStarted(boolean isStarted) {
+        this.isStarted = isStarted;
     }
 
     public DownloadInfoForm getDownloadInfoForm() {

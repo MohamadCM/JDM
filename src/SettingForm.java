@@ -20,7 +20,7 @@ public class SettingForm {
     private JButton okButton;
     private JButton chooseAdress;
     private String saveAdress;
-    private int numberOfSimDowns;
+    private static int numberOfSimDowns;
     private Defaults defaults;
 
     private JTextArea blockedLinks;
@@ -255,7 +255,12 @@ public class SettingForm {
         return saveAdress;
     }
 
-
+    /**
+     * @return number of set simultaneous downloads
+     */
+    public static int getSimultaneousDownloads(){
+        return numberOfSimDowns;
+    }
 
 
 }

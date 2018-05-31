@@ -189,7 +189,9 @@ public class QueueFrame{
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
                     }
+                    delete();
             }
             if (mouseEvent.getSource().equals(resumeButton))
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
@@ -201,6 +203,7 @@ public class QueueFrame{
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
             }
 
             if(mouseEvent.getSource().equals(searchButton))
@@ -224,9 +227,9 @@ public class QueueFrame{
             if(d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(new DPanelMouseLister());
             d.setIndexInDownloads(queue.getIndex(d));
-            if(!d.isStarted() && !d.isFinished() && !d.isCancelled()) {
+            if(!d.isStarted() && !d.isFinished() && !d.isCancelled() && countSimulationsDownloads() < 1) {
                 d.getDownloadUtil().execute();
-                d.setIsStarded(true);
+                d.setIsStarted(true);
             }
 
         }
@@ -329,4 +332,14 @@ public class QueueFrame{
     {
         return mainFrame;
     }
+
+
+    private static int countSimulationsDownloads() {
+        int result = 0;
+        for(Download d : queue.getDownloads())
+            if(d.isStarted() && (!d.isFinished() && !d.isCancelled()))
+                result++;
+        return result;
+    }
+
 }

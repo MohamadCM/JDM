@@ -60,6 +60,7 @@ public class MainForm {
     private static QueueFrame queueFrame;
 
     private Queue mainQueue;
+
     /**
      * Each mainForm needs a title to get created
      *
@@ -340,6 +341,7 @@ public class MainForm {
         for(Download d: queue.getDownloads())
             d.getProgressBar().setValue((int) d.getDownloadInfo().getPercentDownload());
         updateDownloadList();
+
     }
 
     /**
@@ -368,6 +370,7 @@ public class MainForm {
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
                     }
 
             if (mouseEvent.getSource().equals(newDownload))
@@ -377,6 +380,7 @@ public class MainForm {
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
                     }
             }
             if (mouseEvent.getSource().equals(resume))
@@ -416,9 +420,9 @@ public class MainForm {
             if (d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(queue.getIndex(d));
-            if(!d.isStarted() && !d.isFinished() && !d.isCancelled()) {
+            if(!d.isStarted() && !d.isFinished() && !d.isCancelled() && countSimulationsDownloads() < SettingForm.getSimultaneousDownloads()) {
                 d.getDownloadUtil().execute();
-                d.setIsStarded(true);
+                d.setIsStarted(true);
             }
         }
         FileUtils.writeDownload(queue);
@@ -524,12 +528,14 @@ public class MainForm {
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
                     }
             if (actionEvent.getActionCommand().equals("Remove")) {
                 for(Download d : queue.getDownloads())
                     if(d.getIsSelected()) {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
+                        updateDownloadList();
                     }
                 delete();
             }
@@ -572,5 +578,14 @@ public class MainForm {
         for(Download d : queue.getDownloads())
             if(d.getName().contains(searchField.getText()) || d.getLink().contains(searchField.getText()))
                 d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
+    }
+
+    private static int countSimulationsDownloads() {
+        int result = 0;
+        for(Download d : queue.getDownloads()) {
+            if (d.isStarted() && (!d.isCancelled() && !d.isFinished()))
+                result++;
+        }
+        return result;
     }
 }

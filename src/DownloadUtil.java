@@ -71,7 +71,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
             if(Thread.interrupted() || bytesRead <= 0)
                 break;
             outputStream.write(buffer, 0 , bytesRead);
-            if(bytesRead != 0)
+            if(bytesRead > 0)
                 totalRead += bytesRead;
             percentDownloaded = (totalRead * 100) / size;
             download.setDownloadedVolume(totalRead);
@@ -86,7 +86,8 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
             publish(getProgress());
         }
         download.setFinished(true);
-        download.getDownloadInfo().update(size,totalRead,100,(totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
+        if(!download.isCancelled())
+            download.getDownloadInfo().update(size,totalRead,100,(totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
         MainForm.repaintForm();
         QueueFrame.repaintForm();
         publish(getProgress());
