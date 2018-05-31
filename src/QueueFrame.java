@@ -336,7 +336,7 @@ public class QueueFrame{
     private static int countSimulationsDownloads() {
         int result = 0;
         for(Download d : queue.getDownloads())
-            if(d.isStarted() && (!d.isFinished() && !d.isCancelled()))
+            if(d.isStarted() && (!d.isFinished() && !d.isCancelled() && !d.isPaused()))
                 result++;
         return result;
     }
