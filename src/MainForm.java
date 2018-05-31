@@ -372,8 +372,13 @@ public class MainForm {
 
             if (mouseEvent.getSource().equals(newDownload))
                 addDownload();
-            if (mouseEvent.getSource().equals(remove))
-                delete();
+            if (mouseEvent.getSource().equals(remove)) {
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+                    }
+            }
             if (mouseEvent.getSource().equals(resume))
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if (mouseEvent.getSource().equals(pause))
@@ -520,8 +525,14 @@ public class MainForm {
                         d.cancel();
                         d.getDownloadUtil().cancel(true);
                     }
-            if (actionEvent.getActionCommand().equals("Remove"))
+            if (actionEvent.getActionCommand().equals("Remove")) {
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+                    }
                 delete();
+            }
             if (actionEvent.getActionCommand().equals("About me:)                              "))
                 showAboutMe();
             if (actionEvent.getActionCommand().equals("Exit:(")) {

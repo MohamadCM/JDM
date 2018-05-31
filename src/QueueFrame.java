@@ -184,8 +184,13 @@ public class QueueFrame{
         public void mousePressed(MouseEvent mouseEvent) {
             if (mouseEvent.getSource().equals(newDownloadButton))
                 addDownload();
-            if (mouseEvent.getSource().equals(removeButton))
-                delete();
+            if (mouseEvent.getSource().equals(removeButton)) {
+                for(Download d : queue.getDownloads())
+                    if(d.getIsSelected()) {
+                        d.cancel();
+                        d.getDownloadUtil().cancel(true);
+                    }
+            }
             if (mouseEvent.getSource().equals(resumeButton))
                 System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
             if (mouseEvent.getSource().equals(pauseButton))

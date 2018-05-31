@@ -153,7 +153,8 @@ public class NewDownloadForm {
                 fileChooser.showDialog(null, "Confirm");
                 if(fileChooser.getCurrentDirectory().toString() != null && !fileChooser.getCurrentDirectory().toString().equals(""))
                     try {
-                    saveAdress = fileChooser.getSelectedFile().toString();
+                        if(fileChooser.getSelectedFile() != null)
+                             saveAdress = fileChooser.getSelectedFile().toString();
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }

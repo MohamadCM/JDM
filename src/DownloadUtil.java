@@ -27,13 +27,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
              url = new URL("http://" + download.getLink());
         else
             url = new URL(download.getLink());
-        urlConnection = (HttpURLConnection) url.openConnection();
-        if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
-            contentLenth = urlConnection.getContentLength();
-            inputStream = urlConnection.getInputStream();
-            System.out.println("Connected!");
-        }
-        else inputStream = null;
+
     }
     @Override
     protected void process(List<Integer> list) {
@@ -44,6 +38,12 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
 
     @Override
     protected Void doInBackground() throws IOException {
+        urlConnection = (HttpURLConnection) url.openConnection();
+        if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+            contentLenth = urlConnection.getContentLength();
+            inputStream = urlConnection.getInputStream();
+            System.out.println("Connected!");
+        }
         if (inputStream == null)
             throw new IOException();
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
@@ -52,16 +52,18 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         int totalRead = 0;
         byte[] buffer = new byte[2048];
         int size = contentLenth;
+        int percentDownloaded = 0;
         long startTime = System.nanoTime();
 
         download.setVolume(size);
         download.setDownloadedVolume(totalRead);
-        download.setPercentDownload((totalRead * 100 / size));
+        percentDownloaded = totalRead * 100 / size;
+        download.setPercentDownload(percentDownloaded);
         download.getProgressBar().setValue((int) Math.abs(download.getPercentDownload()));
         download.setDownloadRate((totalRead) / ((System.nanoTime() - startTime) / 1000000));
         download.setDownloadedVolume(totalRead / 1000);
-        download.getDownloadInfoForm().updateForm((totalRead * 100 / size) , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
-        download.getDownloadInfo().update(size,totalRead,(totalRead * 100 / size),(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
+        download.getDownloadInfoForm().updateForm(percentDownloaded , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
+        download.getDownloadInfo().update(size,totalRead,percentDownloaded,(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
 
         while (download.getDownloadInfo().getStartTime().isEqual(LocalDateTime.now()) || download.getDownloadInfo().getStartTime().isAfter(LocalDateTime.now()));
 
@@ -71,18 +73,23 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
             outputStream.write(buffer, 0 , bytesRead);
             if(bytesRead != 0)
                 totalRead += bytesRead;
+            percentDownloaded = (totalRead * 100) / size;
             download.setDownloadedVolume(totalRead);
-            download.setPercentDownload((totalRead * 100 / size));
+            download.setPercentDownload(percentDownloaded);
             download.getProgressBar().setValue((int) Math.abs(download.getPercentDownload()));
             download.setDownloadRate((totalRead) / ((System.nanoTime() - startTime) / 1000000));
             download.setDownloadedVolume(totalRead / 1000);
-            download.getDownloadInfoForm().updateForm((totalRead * 100 / size) , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
-            download.getDownloadInfo().update(size,totalRead,(totalRead * 100 / size),(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
+            download.getDownloadInfoForm().updateForm(percentDownloaded , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
+            download.getDownloadInfo().update(size,totalRead,percentDownloaded,(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
             MainForm.repaintForm();
             QueueFrame.repaintForm();
             publish(getProgress());
         }
-        download.getDownloadInfo().update(size,totalRead,(totalRead * 100 / size),(totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
+        download.setFinished(true);
+        download.getDownloadInfo().update(size,totalRead,100,(totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
+        MainForm.repaintForm();
+        QueueFrame.repaintForm();
+        publish(getProgress());
         return null;
     }
 
