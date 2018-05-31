@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
  * Each download task is an instance of this class
  * For adding a new download we should add it to a queue
  * and then add JPanel of download to the MainForm place for downloads.
- * @author  Mohamad Chaman-Motlah
+ *
+ * @author Mohamad Chaman-Motlah
  * @version 1
  */
-public class Download{
+public class Download {
     private JPanel downloadPanel;
     private JProgressBar progressBar;
     private String name;
@@ -42,7 +43,7 @@ public class Download{
 
     private DownloadUtil downloadUtil;
 
-    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime,boolean isFinished, boolean isCancelled) {
+    public Download(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, Queue queue, LocalDateTime startTime, boolean isFinished, boolean isCancelled) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -60,7 +61,7 @@ public class Download{
             e.printStackTrace();
         }
 
-        downloadPanel = new JPanel(new GridLayout(2,3,10,10));
+        downloadPanel = new JPanel(new GridLayout(2, 3, 10, 10));
         nameLabel = new JLabel("Name: " + name);
         downRateLabel = new JLabel("          Download rate:  " + this.downloadRate + "KB/s");
         sizeLabel = new JLabel("Size: " + volume + "KB");
@@ -73,32 +74,30 @@ public class Download{
         downloadPanel.add(sizeLabel);
         downloadPanel.add(percentCompeleted);
         downloadPanel.add(kbDownloadedLabel);
-        downloadPanel.setPreferredSize(new Dimension(1000,100));
+        downloadPanel.setPreferredSize(new Dimension(1000, 100));
 
         addTime = LocalDateTime.now();
-        downloadInfoForm = new DownloadInfoForm(name, address, link , volume, this.downloadedVolume, this.percentDownload, this.downloadRate, addTime, queue, startTime);
+        downloadInfoForm = new DownloadInfoForm(name, address, link, volume, this.downloadedVolume, this.percentDownload, this.downloadRate, addTime, queue, startTime);
         this.address = address;
-        downloadPanel.setPreferredSize(new Dimension(970,100));
+        downloadPanel.setPreferredSize(new Dimension(970, 100));
 
         isSelected = false;
         this.queue = queue;
-        downloadInfo = new DownloadInfo(name,address,volume, this.downloadedVolume, this.percentDownload, this.downloadRate,link, addTime, this.startTime, isFinished, isCancelled);
+        downloadInfo = new DownloadInfo(name, address, volume, this.downloadedVolume, this.percentDownload, this.downloadRate, link, addTime, this.startTime, isFinished, isCancelled);
 
     }
 
     /**
      * @return a panel in order to add it to main form
      */
-    public JPanel getDownloadPanel()
-    {
+    public JPanel getDownloadPanel() {
         return downloadPanel;
     }
 
     /**
      * Shows DonloadInfoForm of current download
      */
-    public void showDownloadInfoForm()
-    {
+    public void showDownloadInfoForm() {
         downloadInfoForm.showForm();
     }
 //    public void updateStatus()
@@ -112,6 +111,7 @@ public class Download{
 
     /**
      * set selection status for the download
+     *
      * @param selected
      */
     public void setIsSelected(boolean selected) {
@@ -120,6 +120,7 @@ public class Download{
 
     /**
      * sets number of this download in queue
+     *
      * @param indexInDownloads
      */
     public void setIndexInDownloads(int indexInDownloads) {
@@ -130,12 +131,13 @@ public class Download{
     /**
      * @return DownloadInfo as DownloadInfo Object
      */
-    public DownloadInfo getDownloadInfo()
-    {
+    public DownloadInfo getDownloadInfo() {
         return downloadInfo;
     }
+
     /**
      * Set DownloadVolume fo a Download
+     *
      * @param downloadedVolume is current download volume
      */
     public void setDownloadedVolume(long downloadedVolume) {
@@ -153,7 +155,7 @@ public class Download{
     /**
      * @return link of Download as a String
      */
-    public String getLink(){
+    public String getLink() {
         return link;
     }
 
@@ -166,11 +168,12 @@ public class Download{
 
     /**
      * Sets Volume of this file
+     *
      * @param volume
      */
     public void setVolume(long volume) {
         this.volume = volume;
-        sizeLabel.setText("Size: " + volume/1000 + "KB");
+        sizeLabel.setText("Size: " + volume / 1000 + "KB");
     }
 
     /**
@@ -180,8 +183,7 @@ public class Download{
         return addTime;
     }
 
-    public JProgressBar getProgressBar()
-    {
+    public JProgressBar getProgressBar() {
         return progressBar;
     }
 
@@ -193,16 +195,8 @@ public class Download{
     }
 
     /**
-     * Sets Percent completed for this download
-     * @param percentDownload
-     */
-    public void setPercentDownload(double percentDownload) {
-        this.percentDownload = percentDownload;
-        percentCompeleted.setText("         \t                  " + this.percentDownload + "% Downloaded");
-    }
-
-    /**
      * Sets download rate
+     *
      * @param downloadRate is current download rate
      */
     public void setDownloadRate(long downloadRate) {
@@ -215,6 +209,16 @@ public class Download{
      */
     public double getPercentDownload() {
         return percentDownload;
+    }
+
+    /**
+     * Sets Percent completed for this download
+     *
+     * @param percentDownload
+     */
+    public void setPercentDownload(double percentDownload) {
+        this.percentDownload = percentDownload;
+        percentCompeleted.setText("         \t                  " + this.percentDownload + "% Downloaded");
     }
 
     public boolean isStarted() {
@@ -238,6 +242,7 @@ public class Download{
 
     /**
      * Set finish stats of this download
+     *
      * @param isFinished is current finishing stat of this download
      */
     public void setFinished(boolean isFinished) {
@@ -254,6 +259,7 @@ public class Download{
 
     /**
      * Show whether the download is cancelled or not
+     *
      * @return {@code true} if the download is cancelled, {@code false} otherwise
      */
     public boolean isCancelled() {
@@ -276,6 +282,7 @@ public class Download{
 
     /**
      * Set pause situation of a download
+     *
      * @param paused is a boolean shows whether this download is paused or not
      */
     public void setPaused(boolean paused) {

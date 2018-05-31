@@ -7,27 +7,30 @@ import java.io.IOException;
 /**
  * This class creates main form of the programme
  * and implements it's functions
+ *
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
 public class MainForm {
     private static MyJFrame downloadManager;
-
+    private static JPanel downloadPanel;
+    private static Queue queue;
+    private static JScrollPane scrollPane;
+    private static DPanelMouseLister downloadPanelMouseLister;
+    private static QueueFrame queueFrame;
+    private final int MaxNumberOfDownloads = 20;
     private JMenuBar menuBar;
     private JMenu downloadMenu;
     private JMenu help;
     private JMenu exitMenu;
     private JPanel mainPanel;
-
     private JToolBar upToolbar;
-
     private JButton newDownloadButton;
     private JButton pauseButton;
     private JButton resumeButton;
     private JButton cancelButton;
     private JButton removeButton;
     private JButton settingButton;
-
     private JMenuItem newDownload;
     private JMenuItem pause;
     private JMenuItem resume;
@@ -38,27 +41,13 @@ public class MainForm {
     private JMenuItem exit;
     private JMenuItem accessRemoved;
     private JMenuItem exportToZip;
-
-    private static JPanel downloadPanel;
     private SettingForm settingForm;
     private MouseListener mouseListener;
-    private static Queue queue;
-    private static JScrollPane scrollPane;
-    private final int MaxNumberOfDownloads = 20;
-
     private JTextField searchField;
     private JButton searchButton;
-
     private JButton sortButton;
-
     private JPopupMenu sortMenu;
-
-    private static DPanelMouseLister downloadPanelMouseLister;
-
     private JButton queueButton;
-
-    private static QueueFrame queueFrame;
-
     private Queue mainQueue;
 
     /**
@@ -259,18 +248,18 @@ public class MainForm {
         queueButton.addMouseListener(mouseListener);
         JPanel leftUpPanel = new JPanel(new BorderLayout());
         leftUpPanel.setBackground(Color.decode("#32363F"));
-        leftUpPanel.add(new JLabel(new ImageIcon("Images/logo.png")),BorderLayout.NORTH);
+        leftUpPanel.add(new JLabel(new ImageIcon("Images/logo.png")), BorderLayout.NORTH);
         leftUpPanel.add(queueButton, BorderLayout.CENTER);
-        leftBlackPanel.add(leftUpPanel,BorderLayout.NORTH);
-        downloadManager.add(leftBlackPanel,BorderLayout.WEST);
+        leftBlackPanel.add(leftUpPanel, BorderLayout.NORTH);
+        downloadManager.add(leftBlackPanel, BorderLayout.WEST);
 
         JLabel credit1 = new JLabel("         Created by \n ");
-        credit1.setFont(new Font("Arial",Font.BOLD,20));
+        credit1.setFont(new Font("Arial", Font.BOLD, 20));
         credit1.setForeground(Color.WHITE);
         JLabel credit2 = new JLabel("       Mohamad CM");
-        credit2.setFont(new Font("Arial",Font.BOLD,20));
+        credit2.setFont(new Font("Arial", Font.BOLD, 20));
         credit2.setForeground(Color.WHITE);
-        JPanel creditPanel = new JPanel(new GridLayout(2,1,1,1));
+        JPanel creditPanel = new JPanel(new GridLayout(2, 1, 1, 1));
         creditPanel.setBackground(Color.decode("#32363F"));
         creditPanel.add(credit1);
         creditPanel.add(credit2);
@@ -278,27 +267,31 @@ public class MainForm {
 
         searchField = new JTextField("Search");
         searchField.setColumns(10);
-        searchButton = new JButton("",new ImageIcon("./Images/search.png"));
+        searchButton = new JButton("", new ImageIcon("./Images/search.png"));
         searchButton.setFocusable(false);
         searchButton.setToolTipText("Find in downloads!");
         searchButton.addMouseListener(mouseListener);
         searchField.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent keyEvent) { }
+            public void keyTyped(KeyEvent keyEvent) {
+            }
+
             @Override
             public void keyPressed(KeyEvent keyEvent) {
-                if(keyEvent.getKeyChar() == KeyEvent.VK_ENTER)
+                if (keyEvent.getKeyChar() == KeyEvent.VK_ENTER)
                     findAndMark();
             }
+
             @Override
-            public void keyReleased(KeyEvent keyEvent) { }
+            public void keyReleased(KeyEvent keyEvent) {
+            }
         });
 
         upToolbar.add(searchField);
         upToolbar.add(searchButton);
 
 
-        if(FileUtils.readDownload(queue) != null)
+        if (FileUtils.readDownload(queue) != null)
             queue.setDownloads(FileUtils.readDownload(queue));
 
 
@@ -308,13 +301,13 @@ public class MainForm {
         sortMenu = new JPopupMenu();
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by name   " + "⇅") {
             public void actionPerformed(ActionEvent e) {
-                queue.sortBy("name",true);
+                queue.sortBy("name", true);
                 updateDownloadList();
             }
         }));
         sortMenu.add(new JMenuItem(new AbstractAction("Sort by size  " + "⇅") {
             public void actionPerformed(ActionEvent e) {
-                queue.sortBy("size",true);
+                queue.sortBy("size", true);
                 updateDownloadList();
             }
         }));
@@ -336,62 +329,12 @@ public class MainForm {
         mainQueue = new Queue("Main queue");
 
         queueFrame = new QueueFrame(mainQueue, settingForm);
-        queue.sortBy("time",true);
+        queue.sortBy("time", true);
 
-        for(Download d: queue.getDownloads())
+        for (Download d : queue.getDownloads())
             d.getProgressBar().setValue((int) d.getDownloadInfo().getPercentDownload());
         updateDownloadList();
 
-    }
-
-    /**
-     * Makes the mainForm visible
-     */
-    public void showGUI() {
-        downloadManager.setVisible(true);
-    }
-
-    private class MyMouseListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-            if (mouseEvent.getSource().equals(settingButton))
-                settingForm.showSetting();
-            if (mouseEvent.getSource().equals(newDownloadButton))
-                addDownload();
-            if (mouseEvent.getSource().equals(removeButton))
-                delete();
-            if (mouseEvent.getSource().equals(resumeButton))
-                resume();
-            if (mouseEvent.getSource().equals(pauseButton))
-                pause();
-            if (mouseEvent.getSource().equals(cancelButton))
-                for(Download d : queue.getDownloads())
-                    if(d.getIsSelected()) {
-                        d.cancel();
-                        d.getDownloadUtil().cancel(true);
-                        updateDownloadList();
-                    }
-
-            if (mouseEvent.getSource().equals(newDownload))
-                addDownload();
-            if (mouseEvent.getSource().equals(remove)) {
-                for(Download d : queue.getDownloads())
-                    if(d.getIsSelected()) {
-                        d.cancel();
-                        d.getDownloadUtil().cancel(true);
-                        updateDownloadList();
-                    }
-            }
-            if(mouseEvent.getSource().equals(searchButton))
-                findAndMark();
-            if(mouseEvent.getSource().equals(queueButton))
-                queueFrame.showGUI();
-        }
-    }
-
-    private void addDownload() {
-        NewDownloadForm downloadForm = new NewDownloadForm(settingForm.getSaveAdress(), queue);
-        downloadForm.showForm();
     }
 
     /**
@@ -405,7 +348,7 @@ public class MainForm {
             if (d.getDownloadPanel().getMouseListeners().length == 0)
                 d.getDownloadPanel().addMouseListener(downloadPanelMouseLister);
             d.setIndexInDownloads(queue.getIndex(d));
-            if(!d.isStarted() && !d.isFinished() && !d.isCancelled() && countSimulationsDownloads() < SettingForm.getSimultaneousDownloads()) {
+            if (!d.isStarted() && !d.isFinished() && !d.isCancelled() && countSimulationsDownloads() < SettingForm.getSimultaneousDownloads()) {
                 d.getDownloadUtil().execute();
                 d.setIsStarted(true);
             }
@@ -413,6 +356,48 @@ public class MainForm {
         FileUtils.writeDownload(queue);
         downloadPanel.revalidate();
         downloadPanel.repaint();
+    }
+
+    public static void repaintForm() {
+        SwingUtilities.invokeLater(() -> {
+            downloadPanel.revalidate();
+            downloadPanel.repaint();
+        });
+    }
+
+    /**
+     * @return main frame as a JFrame
+     */
+    public static JFrame getDownloadManager() {
+        return downloadManager;
+    }
+
+    /**
+     * @return main queue as Queue object
+     */
+    public static Queue getQueue() {
+        return queue;
+    }
+
+    private static int countSimulationsDownloads() {
+        int result = 0;
+        for (Download d : queue.getDownloads()) {
+            if (d.isStarted() && (!d.isCancelled() && !d.isFinished() && !d.isPaused()))
+                result++;
+        }
+        return result;
+    }
+
+    /**
+     * Makes the mainForm visible
+     */
+    public void showGUI() {
+        downloadManager.setVisible(true);
+    }
+
+    private void addDownload() {
+        NewDownloadForm downloadForm = new NewDownloadForm(settingForm.getSaveAdress(), queue);
+        downloadForm.showForm();
     }
 
     private void showAboutMe() {
@@ -428,28 +413,74 @@ public class MainForm {
                 "Thanks for using MY DownloadManager");
     }
 
+    private void delete() {
+        if (queue.getDownloads().size() == 0)
+            return;
+        int i = 0;
+        for (i = 0; i < queue.getDownloads().size(); i++)
+            if (queue.getDownloads().get(i).getIsSelected())
+                break;
+        if (i == queue.getDownloads().size())
+            return;
+        queue.removeDownload(i);
+        updateDownloadList();
+    }
+
+    private void findAndMark() {
+        for (Download d : queue.getDownloads())
+            d.getDownloadPanel().setBackground(Color.WHITE);
+        for (Download d : queue.getDownloads())
+            if (d.getName().contains(searchField.getText()) || d.getLink().contains(searchField.getText()))
+                d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
+    }
+
+    private void pause() {
+        for (Download d : queue.getDownloads())
+            if (d.getIsSelected())
+                d.getDownloadUtil().pause();
+        updateDownloadList();
+    }
+
+    private void resume() {
+        for (Download d : queue.getDownloads())
+            if (d.getIsSelected())
+                d.getDownloadUtil().resume();
+        updateDownloadList();
+    }
+
+    private void cancel() {
+        for (Download d : queue.getDownloads())
+            if (d.getIsSelected()) {
+                d.cancel();
+                d.getDownloadUtil().cancel(true);
+                updateDownloadList();
+            }
+    }
+
     /*
     Listener for downloads
      */
     private static class DPanelMouseLister implements MouseListener {
         @Override
-        public void mouseClicked(MouseEvent mouseEvent) { }
+        public void mouseClicked(MouseEvent mouseEvent) {
+        }
+
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
             for (Download d : queue.getDownloads()) {
                 if (mouseEvent.getClickCount() == 2 && !mouseEvent.isConsumed() && mouseEvent.getSource().equals(d.getDownloadPanel())) {
-                       if(d.getIsSelected() && d.isFinished()) {
+                    if (d.getIsSelected() && d.isFinished()) {
 
-                           File file = new File(d.getAddress() + "/" + d.getName());
-                           if(!file.exists())
-                               return;
-                           Desktop desktop = Desktop.getDesktop();
-                           try {
-                               desktop.open(file);
-                           } catch (IOException e) {
-                               e.printStackTrace();
-                           }
-                       }
+                        File file = new File(d.getAddress() + "/" + d.getName());
+                        if (!file.exists())
+                            return;
+                        Desktop desktop = Desktop.getDesktop();
+                        try {
+                            desktop.open(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     break;
                 }
                 if (mouseEvent.getSource().equals(d.getDownloadPanel()) && mouseEvent.getButton() == MouseEvent.BUTTON3)
@@ -472,29 +503,45 @@ public class MainForm {
         }
 
         @Override
-        public void mouseReleased(MouseEvent mouseEvent) { }
+        public void mouseReleased(MouseEvent mouseEvent) {
+        }
 
         @Override
-        public void mouseEntered(MouseEvent mouseEvent) { }
+        public void mouseEntered(MouseEvent mouseEvent) {
+        }
 
         @Override
-        public void mouseExited(MouseEvent mouseEvent) { }
+        public void mouseExited(MouseEvent mouseEvent) {
+        }
     }
 
-    private void delete() {
-        if (queue.getDownloads().size() == 0)
-            return;
-        int i = 0;
-        for (i = 0; i < queue.getDownloads().size(); i++)
-            if (queue.getDownloads().get(i).getIsSelected())
-                break;
-        if(i == queue.getDownloads().size())
-            return;
-        queue.removeDownload(i);
-        updateDownloadList();
+    private class MyMouseListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+            if (mouseEvent.getSource().equals(settingButton))
+                settingForm.showSetting();
+            if (mouseEvent.getSource().equals(newDownloadButton))
+                addDownload();
+            if (mouseEvent.getSource().equals(removeButton))
+                delete();
+            if (mouseEvent.getSource().equals(resumeButton))
+                resume();
+            if (mouseEvent.getSource().equals(pauseButton))
+                pause();
+            if (mouseEvent.getSource().equals(cancelButton))
+                cancel();
+            if (mouseEvent.getSource().equals(newDownload))
+                addDownload();
+            if (mouseEvent.getSource().equals(remove)) {
+                cancel();
+                delete();
+            }
+            if (mouseEvent.getSource().equals(searchButton))
+                findAndMark();
+            if (mouseEvent.getSource().equals(queueButton))
+                queueFrame.showGUI();
+        }
     }
-
-
 
     private class MyActionListener implements ActionListener {
 
@@ -509,19 +556,9 @@ public class MainForm {
             if (actionEvent.getActionCommand().equals("Pause"))
                 pause();
             if (actionEvent.getActionCommand().equals("Cancel"))
-                for(Download d : queue.getDownloads())
-                    if(d.getIsSelected()) {
-                        d.cancel();
-                        d.getDownloadUtil().cancel(true);
-                        updateDownloadList();
-                    }
+                cancel();
             if (actionEvent.getActionCommand().equals("Remove")) {
-                for(Download d : queue.getDownloads())
-                    if(d.getIsSelected()) {
-                        d.cancel();
-                        d.getDownloadUtil().cancel(true);
-                        updateDownloadList();
-                    }
+                cancel();
                 delete();
             }
             if (actionEvent.getActionCommand().equals("About me:)                              "))
@@ -534,57 +571,5 @@ public class MainForm {
             if (actionEvent.getActionCommand().equals("Export to zip"))
                 FileUtils.exportToZip();
         }
-    }
-
-    public static void repaintForm() {
-        SwingUtilities.invokeLater(()-> {
-            downloadPanel.revalidate();
-            downloadPanel.repaint();
-        });
-    }
-
-    /**
-     * @return main frame as a JFrame
-     */
-    public static JFrame getDownloadManager(){
-        return downloadManager;
-    }
-
-    /**
-     * @return main queue as Queue object
-     */
-    public static Queue getQueue(){
-        return queue;
-    }
-
-    private void findAndMark(){
-        for(Download d : queue.getDownloads())
-            d.getDownloadPanel().setBackground(Color.WHITE);
-        for(Download d : queue.getDownloads())
-            if(d.getName().contains(searchField.getText()) || d.getLink().contains(searchField.getText()))
-                d.getDownloadPanel().setBackground(Color.decode("#51ff54"));
-    }
-
-    private static int countSimulationsDownloads() {
-        int result = 0;
-        for(Download d : queue.getDownloads()) {
-            if (d.isStarted() && (!d.isCancelled() && !d.isFinished() && !d.isPaused()))
-                result++;
-        }
-        return result;
-    }
-
-    private void pause(){
-        for(Download d : queue.getDownloads())
-            if(d.getIsSelected())
-                d.getDownloadUtil().pause();
-        updateDownloadList();
-    }
-
-    private void resume() {
-        for(Download d : queue.getDownloads())
-            if(d.getIsSelected())
-                d.getDownloadUtil().resume();
-        updateDownloadList();
     }
 }

@@ -1,17 +1,20 @@
-import com.sun.xml.internal.messaging.saaj.soap.JpegDataContentHandler;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 
 /**
  * This class creates setting form
+ *
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
 public class SettingForm {
+    private static int numberOfSimDowns;
     private JFrame mainFrame;
     private JFileChooser fileChooser;
     private JSpinner numberofDownsSpinner;
@@ -20,7 +23,6 @@ public class SettingForm {
     private JButton okButton;
     private JButton chooseAdress;
     private String saveAdress;
-    private static int numberOfSimDowns;
     private Defaults defaults;
 
     private JTextArea blockedLinks;
@@ -33,20 +35,20 @@ public class SettingForm {
         mainFrame.setSize(500, 400);
 
 
-        if(FileUtils.readDefaults() != null)
+        if (FileUtils.readDefaults() != null)
             defaults = FileUtils.readDefaults();
 
 
         numberOfSimDowns = 1;
-        if(defaults != null)
+        if (defaults != null)
             numberOfSimDowns = defaults.getNumberOfSimDownloads();
 
 
-        JPanel upPanel = new JPanel(new GridLayout(3,2,5,5));
+        JPanel upPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         upPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         JPanel borderPanel = new JPanel();
-        borderPanel.setBorder(new EmptyBorder(5,5,5,5));
+        borderPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         mainFrame.setContentPane(borderPanel);
 
         mainFrame.setLayout(new BorderLayout());
@@ -68,14 +70,13 @@ public class SettingForm {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
                 lookAndFeelInfoBox.addItem(info.getClassName());
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         fileChooser = new JFileChooser();
 
         saveAdress = "./" + System.getProperty("user.dir");
-        if(defaults != null)
+        if (defaults != null)
             saveAdress = defaults.getLocation();
 
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -108,18 +109,17 @@ public class SettingForm {
 
         okButton.requestFocus();
 
-        JPanel okAndCancelPanel = new JPanel(new GridLayout(1,2,5,5));
+        JPanel okAndCancelPanel = new JPanel(new GridLayout(1, 2, 5, 5));
         okAndCancelPanel.add(cancelButton);
         okAndCancelPanel.add(okButton);
-        mainFrame.add(okAndCancelPanel,BorderLayout.SOUTH);
+        mainFrame.add(okAndCancelPanel, BorderLayout.SOUTH);
         try {
 
             lookAndFeelInfoBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        if(defaults != null) {
+        if (defaults != null) {
             lookAndFeelInfoBox.setSelectedItem(defaults.getLookAndFeelInfo());
             try {
                 UIManager.setLookAndFeel(defaults.getLookAndFeelInfo());
@@ -134,7 +134,7 @@ public class SettingForm {
                 System.out.println(e.getMessage());
             } catch (UnsupportedLookAndFeelException e) {
                 System.out.println(e.getMessage());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -145,15 +145,22 @@ public class SettingForm {
         blockedListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         JPanel blockListPanel = new JPanel(new BorderLayout());
-        blockListPanel.add(new JLabel("Blocked links:"),BorderLayout.NORTH);
+        blockListPanel.add(new JLabel("Blocked links:"), BorderLayout.NORTH);
         blockListPanel.add(blockedListScrollPane, BorderLayout.CENTER);
 
         mainFrame.add(blockListPanel, BorderLayout.CENTER);
 
-        if(FileUtils.readBlockedLinks() != null)
-            for(String string : FileUtils.readBlockedLinks())
+        if (FileUtils.readBlockedLinks() != null)
+            for (String string : FileUtils.readBlockedLinks())
                 blockedLinks.setText(blockedLinks.getText() + string + "\n");
         //mainFrame.requestFocus();
+    }
+
+    /**
+     * @return number of set simultaneous downloads
+     */
+    public static int getSimultaneousDownloads() {
+        return numberOfSimDowns;
     }
 
     /**
@@ -165,6 +172,13 @@ public class SettingForm {
 
     private void hidesetting() {
         mainFrame.setVisible(false);
+    }
+
+    /**
+     * @return location of saving a file
+     */
+    public String getSaveAdress() {
+        return saveAdress;
     }
 
     private class MyMouseListener extends MouseAdapter {
@@ -189,7 +203,7 @@ public class SettingForm {
                     e.printStackTrace();
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
-                }catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
                 if (fileChooser != null && fileChooser.getSelectedFile() != null)
@@ -198,7 +212,7 @@ public class SettingForm {
                 mainFrame.dispose();
                 MainForm.repaintForm();
 
-                defaults = new Defaults(saveAdress,(Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
+                defaults = new Defaults(saveAdress, (Integer) numberofDownsSpinner.getValue(), lookAndFeelInfoBox.getSelectedItem().toString());
 
                 FileUtils.writeDefaults(defaults);
                 FileUtils.writeBlockedLinks(blockedLinks.getText());
@@ -230,7 +244,7 @@ public class SettingForm {
                     e.printStackTrace();
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
-                }catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
                 if (fileChooser.getSelectedFile() != null)
@@ -246,20 +260,6 @@ public class SettingForm {
             }
 
         }
-    }
-
-    /**
-     * @return location of saving a file
-     */
-    public String getSaveAdress() {
-        return saveAdress;
-    }
-
-    /**
-     * @return number of set simultaneous downloads
-     */
-    public static int getSimultaneousDownloads(){
-        return numberOfSimDowns;
     }
 
 

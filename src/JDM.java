@@ -1,7 +1,6 @@
-import javax.swing.*;
-
 /**
  * This class is used to run the DownloadManger
+ *
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */

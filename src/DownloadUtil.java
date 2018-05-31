@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +19,20 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     private boolean paused = false;
 
     /**
+     * Each download task need a Download object to complete
+     *
+     * @param download
+     */
+    public DownloadUtil(Download download) throws IOException {
+        this.download = download;
+        if (!download.getLink().startsWith("http://") && !download.getLink().startsWith("https://"))
+            url = new URL("http://" + download.getLink());
+        else
+            url = new URL(download.getLink());
+
+    }
+
+    /**
      * Pause this download task
      */
     public void pause() {
@@ -33,18 +46,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         paused = false;
         this.notify();
     }
-    /**
-     * Each download task need a Download object to complete
-     * @param download
-     */
-    public DownloadUtil(Download download) throws IOException {
-        this.download = download;
-        if(!download.getLink().startsWith("http://") && !download.getLink().startsWith("https://"))
-             url = new URL("http://" + download.getLink());
-        else
-            url = new URL(download.getLink());
 
-    }
     @Override
     protected void process(List<Integer> list) {
         super.process(list);
@@ -55,7 +57,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     @Override
     protected Void doInBackground() throws IOException {
         urlConnection = (HttpURLConnection) url.openConnection();
-        if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
             System.out.println("Connected!");
@@ -78,12 +80,13 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         download.getProgressBar().setValue((int) Math.abs(download.getPercentDownload()));
         download.setDownloadRate((totalRead) / ((System.nanoTime() - startTime) / 1000000));
         download.setDownloadedVolume(totalRead / 1000);
-        download.getDownloadInfoForm().updateForm(percentDownloaded , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
-        download.getDownloadInfo().update(size,totalRead,percentDownloaded,(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
+        download.getDownloadInfoForm().updateForm(percentDownloaded, size / 1000, totalRead / 1000, Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
+        download.getDownloadInfo().update(size, totalRead, percentDownloaded, (totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
 
-        while (download.getDownloadInfo().getStartTime().isEqual(LocalDateTime.now()) || download.getDownloadInfo().getStartTime().isAfter(LocalDateTime.now()));
+        while (download.getDownloadInfo().getStartTime().isEqual(LocalDateTime.now()) || download.getDownloadInfo().getStartTime().isAfter(LocalDateTime.now()))
+            ;
 
-        while(true) {
+        while (true) {
             if (paused) {
                 try {
                     synchronized (this) {
@@ -92,8 +95,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
                 } catch (InterruptedException ex) {
                     System.out.println("Background interrupted");
                 }
-            }
-            else {
+            } else {
                 bytesRead = bufferedInputStream.read(buffer);
                 if (Thread.interrupted() || bytesRead <= 0)
                     break;

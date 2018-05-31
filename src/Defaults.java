@@ -1,7 +1,8 @@
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * This class keeps and saves default preferences of programme
+ *
  * @author Mohamad Chaman-Motalgh
  * @version 1
  */
@@ -10,7 +11,7 @@ public class Defaults implements Serializable {
     private int numberOfSimDownloads;
     private String lookAndFeelInfo;
 
-    public Defaults(String location, int numberOfSimDownloads, String lookAndFeelInfo){
+    public Defaults(String location, int numberOfSimDownloads, String lookAndFeelInfo) {
 
         this.location = location;
         this.numberOfSimDownloads = numberOfSimDownloads;

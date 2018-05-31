@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -6,6 +5,7 @@ import java.time.LocalDateTime;
  * This class is used to keep and save
  * Download info of each Download
  * to use them to read and write Downloads to File
+ *
  * @author Mohamad Chaman-Motlagh
  * @version 1
  */
@@ -21,7 +21,8 @@ public class DownloadInfo implements Serializable {
     private LocalDateTime startTime;
     private boolean isFinished;
     private boolean isCancelled;
-    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime, boolean isFinished , boolean isCancelled) {
+
+    public DownloadInfo(String name, String address, long volume, long downloadedVolume, double percentDownload, long downloadRate, String link, LocalDateTime addTime, LocalDateTime startTime, boolean isFinished, boolean isCancelled) {
         this.name = name;
         this.address = address;
         this.volume = volume;
@@ -102,29 +103,30 @@ public class DownloadInfo implements Serializable {
     /**
      * @return starting time of Download
      */
-    public LocalDateTime getStartTime()
-    {
-       return startTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
 
     /**
      * Sets start time for download
+     *
      * @param startTime is given startTime
      */
-    public void setStartTime(LocalDateTime startTime){
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
     /**
      * Update info of each download
+     *
      * @param volume
      * @param downloadedVolume
      * @param percentDownload
      * @param downloadRate
      * @param isFinished
      */
-    public void update(long volume,long downloadedVolume , double percentDownload , long downloadRate, boolean isFinished) {
+    public void update(long volume, long downloadedVolume, double percentDownload, long downloadRate, boolean isFinished) {
         this.volume = volume;
         this.downloadedVolume = downloadedVolume;
         this.percentDownload = percentDownload;
@@ -141,6 +143,7 @@ public class DownloadInfo implements Serializable {
 
     /**
      * Set finish stats of this download
+     *
      * @param isFinished is current finishing stat of this download
      */
     public void setFinished(boolean isFinished) {
@@ -149,6 +152,7 @@ public class DownloadInfo implements Serializable {
 
     /**
      * Show whether the download is cancelled or not
+     *
      * @return {@code true} if the download is cancelled, {@code false} otherwise
      */
     public boolean isCancelled() {
