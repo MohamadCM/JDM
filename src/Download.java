@@ -31,6 +31,7 @@ public class Download{
     private boolean isStarted;
     private boolean isFinished;
     private boolean isCancelled;
+    private boolean isPaused;
 
     private JLabel nameLabel;
     private JLabel mbDownloaded;
@@ -264,5 +265,20 @@ public class Download{
      */
     public DownloadUtil getDownloadUtil() {
         return downloadUtil;
+    }
+
+    /**
+     * @return {@code true} if the download is paused, {@code false} otherwise
+     */
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    /**
+     * Set pause situation of a download
+     * @param paused is a boolean shows whether this download is paused or not
+     */
+    public void setPaused(boolean paused) {
+        isPaused = paused;
     }
 }

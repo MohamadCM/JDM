@@ -361,10 +361,9 @@ public class MainForm {
             if (mouseEvent.getSource().equals(removeButton))
                 delete();
             if (mouseEvent.getSource().equals(resumeButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+                resume();
             if (mouseEvent.getSource().equals(pauseButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-
+                pause();
             if (mouseEvent.getSource().equals(cancelButton))
                 for(Download d : queue.getDownloads())
                     if(d.getIsSelected()) {
@@ -383,20 +382,6 @@ public class MainForm {
                         updateDownloadList();
                     }
             }
-            if (mouseEvent.getSource().equals(resume))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if (mouseEvent.getSource().equals(pause))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if (mouseEvent.getSource().equals(cancel))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-            if (mouseEvent.getSource().equals(setting))
-                settingForm.showSetting();
-            if (mouseEvent.getSource().equals(aboutMe))
-                showAboutMe();
-            if (mouseEvent.getSource().equals(exit))
-                System.exit(0);
-            if(mouseEvent.getSource().equals(accessRemoved))
-                FileUtils.openRemovedList();
             if(mouseEvent.getSource().equals(searchButton))
                 findAndMark();
             if(mouseEvent.getSource().equals(queueButton))
@@ -520,9 +505,9 @@ public class MainForm {
             if (actionEvent.getActionCommand().equals("Setting"))
                 settingForm.showSetting();
             if (actionEvent.getActionCommand().equals("Resume"))
-                System.out.println("Source: " + actionEvent.getSource());
+                resume();
             if (actionEvent.getActionCommand().equals("Pause"))
-                System.out.println("Source: " + actionEvent.getSource());
+                pause();
             if (actionEvent.getActionCommand().equals("Cancel"))
                 for(Download d : queue.getDownloads())
                     if(d.getIsSelected()) {
@@ -583,9 +568,23 @@ public class MainForm {
     private static int countSimulationsDownloads() {
         int result = 0;
         for(Download d : queue.getDownloads()) {
-            if (d.isStarted() && (!d.isCancelled() && !d.isFinished()))
+            if (d.isStarted() && (!d.isCancelled() && !d.isFinished() && !d.isPaused()))
                 result++;
         }
         return result;
+    }
+
+    private void pause(){
+        for(Download d : queue.getDownloads())
+            if(d.getIsSelected())
+                d.getDownloadUtil().pause();
+        updateDownloadList();
+    }
+
+    private void resume() {
+        for(Download d : queue.getDownloads())
+            if(d.getIsSelected())
+                d.getDownloadUtil().resume();
+        updateDownloadList();
     }
 }

@@ -17,6 +17,22 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     private URL url;
     private int contentLenth;
     private InputStream inputStream;
+    private boolean paused = false;
+
+    /**
+     * Pause this download task
+     */
+    public void pause() {
+        paused = true;
+    }
+
+    /**
+     * Resume this downloads (if paused)
+     */
+    public synchronized void resume() {
+        paused = false;
+        this.notify();
+    }
     /**
      * Each download task need a Download object to complete
      * @param download
@@ -68,29 +84,40 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         while (download.getDownloadInfo().getStartTime().isEqual(LocalDateTime.now()) || download.getDownloadInfo().getStartTime().isAfter(LocalDateTime.now()));
 
         while((bytesRead = bufferedInputStream.read(buffer) ) > 0) {
-            if(Thread.interrupted() || bytesRead <= 0)
-                break;
-            outputStream.write(buffer, 0 , bytesRead);
-            if(bytesRead > 0)
-                totalRead += bytesRead;
-            percentDownloaded = (totalRead * 100) / size;
-            download.setDownloadedVolume(totalRead);
-            download.setPercentDownload(percentDownloaded);
-            download.getProgressBar().setValue((int) Math.abs(download.getPercentDownload()));
-            download.setDownloadRate((totalRead) / ((System.nanoTime() - startTime) / 1000000));
-            download.setDownloadedVolume(totalRead / 1000);
-            download.getDownloadInfoForm().updateForm(percentDownloaded , size/1000 , totalRead/1000 , Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
-            download.getDownloadInfo().update(size,totalRead,percentDownloaded,(totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
+            if (paused) {
+                try {
+                    synchronized (this) {
+                        wait(1000);
+                    }
+                } catch (InterruptedException ex) {
+                    System.out.println("Background interrupted");
+                }
+            }
+            else {
+                if (Thread.interrupted() || bytesRead <= 0)
+                    break;
+                outputStream.write(buffer, 0, bytesRead);
+                if (bytesRead > 0)
+                    totalRead += bytesRead;
+                percentDownloaded = (totalRead * 100) / size;
+                download.setDownloadedVolume(totalRead);
+                download.setPercentDownload(percentDownloaded);
+                download.getProgressBar().setValue((int) Math.abs(download.getPercentDownload()));
+                download.setDownloadRate((totalRead) / ((System.nanoTime() - startTime) / 1000000));
+                download.setDownloadedVolume(totalRead / 1000);
+                download.getDownloadInfoForm().updateForm(percentDownloaded, size / 1000, totalRead / 1000, Math.toIntExact((totalRead) / ((System.nanoTime() - startTime) / 1000000)));
+                download.getDownloadInfo().update(size, totalRead, percentDownloaded, (totalRead) / ((System.nanoTime() - startTime) / 1000000), size == totalRead);
+                MainForm.repaintForm();
+                QueueFrame.repaintForm();
+                publish(getProgress());
+            }
+            download.setFinished(true);
+            if (!download.isCancelled())
+                download.getDownloadInfo().update(size, totalRead, 100, (totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
             MainForm.repaintForm();
             QueueFrame.repaintForm();
             publish(getProgress());
         }
-        download.setFinished(true);
-        if(!download.isCancelled())
-            download.getDownloadInfo().update(size,totalRead,100,(totalRead) / ((System.nanoTime() - startTime) / 1000000), true);
-        MainForm.repaintForm();
-        QueueFrame.repaintForm();
-        publish(getProgress());
         return null;
     }
 

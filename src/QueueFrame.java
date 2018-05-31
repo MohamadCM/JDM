@@ -194,10 +194,9 @@ public class QueueFrame{
                     delete();
             }
             if (mouseEvent.getSource().equals(resumeButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
+                resume();
             if (mouseEvent.getSource().equals(pauseButton))
-                System.out.println("Pressed " + " Event:" + mouseEvent + "\nSource: " + mouseEvent.getSource());
-
+                pause();
             if (mouseEvent.getSource().equals(cancelButton))
                 for(Download d : queue.getDownloads())
                     if(d.getIsSelected()) {
@@ -340,6 +339,20 @@ public class QueueFrame{
             if(d.isStarted() && (!d.isFinished() && !d.isCancelled()))
                 result++;
         return result;
+    }
+
+    private void pause(){
+        for(Download d : queue.getDownloads())
+            if(d.getIsSelected())
+                d.getDownloadUtil().pause();
+        updateDownloadList();
+    }
+
+    private void resume() {
+        for(Download d : queue.getDownloads())
+            if(d.getIsSelected())
+                d.getDownloadUtil().resume();
+        updateDownloadList();
     }
 
 }
