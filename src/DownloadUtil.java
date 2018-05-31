@@ -83,7 +83,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
 
         while (download.getDownloadInfo().getStartTime().isEqual(LocalDateTime.now()) || download.getDownloadInfo().getStartTime().isAfter(LocalDateTime.now()));
 
-        while((bytesRead = bufferedInputStream.read(buffer) ) > 0) {
+        while(true) {
             if (paused) {
                 try {
                     synchronized (this) {
@@ -94,6 +94,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
                 }
             }
             else {
+                bytesRead = bufferedInputStream.read(buffer);
                 if (Thread.interrupted() || bytesRead <= 0)
                     break;
                 outputStream.write(buffer, 0, bytesRead);
