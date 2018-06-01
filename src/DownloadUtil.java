@@ -64,13 +64,13 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
         }
         urlConnection = (HttpURLConnection) url.openConnection();
 
-        System.out.println(urlConnection.getResponseCode());
+        //System.out.println(urlConnection.getResponseCode());
         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
-            System.out.println("Connected!");
-        }else if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK || urlConnection == null){
-            JOptionPane.showConfirmDialog(null, "Cannot connect to net!");
+        //    System.out.println("Connected!");
+        }else{
+            JOptionPane.showConfirmDialog(null, "Cannot connect to server!");
             return null;
         }
         if (inputStream == null)
@@ -143,7 +143,7 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
 
     private static boolean netIsAvailable() {
         try {
-            final URL url = new URL("http://www.google.com");
+            final URL url = new URL("https://www.google.com");
             final URLConnection conn = url.openConnection();
             conn.connect();
             conn.getInputStream().close();
