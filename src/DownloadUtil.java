@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,13 +58,19 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
 
     @Override
     protected Void doInBackground() throws IOException {
+        if(!netIsAvailable()){
+            JOptionPane.showMessageDialog(null, "Internet not available");
+            return null;
+        }
         urlConnection = (HttpURLConnection) url.openConnection();
+
+        System.out.println(urlConnection.getResponseCode());
         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
             System.out.println("Connected!");
         }else if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK || urlConnection == null){
-            JOptionPane.showConfirmDialog(null, "Not a correct link");
+            JOptionPane.showConfirmDialog(null, "Cannot connect to net!");
             return null;
         }
         if (inputStream == null)
@@ -130,5 +138,20 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     @Override
     protected void done() {
         super.done();
+    }
+
+
+    private static boolean netIsAvailable() {
+        try {
+            final URL url = new URL("http://www.google.com");
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+            conn.getInputStream().close();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
