@@ -61,6 +61,9 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
             System.out.println("Connected!");
+        }else if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK || urlConnection == null){
+            JOptionPane.showConfirmDialog(null, "Not a correct link");
+            return null;
         }
         if (inputStream == null)
             throw new IOException();
