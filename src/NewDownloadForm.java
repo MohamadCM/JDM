@@ -149,7 +149,7 @@ public class NewDownloadForm {
 
     private boolean isBlocked(String url) {
         for (String string : FileUtils.readBlockedLinks())
-            if (url.startsWith(string) || url.startsWith("http://" + string) || url.startsWith("https://" + string))
+            if (url.startsWith(string) || url.startsWith("http://" + string) || url.startsWith("https://" + string) || url.contains(string) || url.contains("http://" + string) || url.contains("https://" + string))
                 if (!string.equals("") && !string.equals("\n") && !string.equals(" ") && !string.equals(null) && string.length() != 0)
                     return true;
 
