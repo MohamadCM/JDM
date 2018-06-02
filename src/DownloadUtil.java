@@ -59,13 +59,22 @@ public class DownloadUtil extends SwingWorker<Void, Integer> {
     @Override
     protected Void doInBackground() throws IOException {
         if(!netIsAvailable()){
-            JOptionPane.showMessageDialog(null, "Internet not available");
+            JOptionPane.showMessageDialog(null, "Internet not available", "Error" ,JOptionPane.ERROR_MESSAGE);
             return null;
         }
         urlConnection = (HttpURLConnection) url.openConnection();
 
-        //System.out.println(urlConnection.getResponseCode());
-        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+        int responseCode = -1;
+
+        try {
+            responseCode = urlConnection.getResponseCode();
+        }catch (IOException e){
+            JOptionPane.showMessageDialog(null, "          Wrong link", "Error" ,JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
             contentLenth = urlConnection.getContentLength();
             inputStream = urlConnection.getInputStream();
         //    System.out.println("Connected!");
